@@ -1,55 +1,12 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading Comprehension - LEXI AI</title>
+<?= $this->extend('layouts/app') ?>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<?= $this->section('content') ?>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-
-<body class="bg-zinc-50 text-zinc-800 font-sans antialiased">
-
-<!-- Navbar -->
-<nav class="bg-white border-b border-zinc-200/60 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-        <div class="text-lg font-bold tracking-tight text-zinc-900 flex items-center gap-2">
-            <span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">LEXI</span>
-            <span class="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">AI</span>
-        </div>
-
-        <div class="flex items-center gap-4">
-            <div class="text-right hidden sm:block">
-                <p class="font-semibold text-sm text-zinc-900 leading-tight">Budi Santoso</p>
-                <p class="text-xs text-zinc-400 font-medium tracking-wide mt-0.5">MAHASISWA PERTANIAN</p>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-zinc-950 text-white flex items-center justify-center text-xs font-bold tracking-wider">
-                BS
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div class="max-w-7xl mx-auto p-6 space-y-6">
+<div class="space-y-6">
 
     <!-- Breadcrumb -->
     <div class="text-xs font-medium text-zinc-400 uppercase tracking-wider flex items-center gap-2">
-        <a href="<?php echo base_url('dashboard') ?>" class="hover:text-zinc-600 transition-colors">Dashboard</a>
+        <a href="<?= site_url('dashboard') ?>" class="hover:text-zinc-600 transition-colors">Dashboard</a>
         <span>/</span>
         <span class="text-zinc-900">Reading Comprehension</span>
     </div>
@@ -152,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="<?php echo base_url('reading-test') ?>" class="w-full sm:w-auto bg-zinc-950 hover:bg-zinc-900 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
+                <a href="<?= site_url('reading-test') ?>" class="w-full sm:w-auto bg-zinc-950 hover:bg-zinc-900 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
                     Mulai Sesi
                 </a>
             </div>
@@ -244,5 +201,4 @@
     </div>
 </div>
 
-</body>
-</html>
+<?= $this->endSection() ?>

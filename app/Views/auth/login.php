@@ -89,46 +89,86 @@
                 </p>
             </div>
 
-            <form class="space-y-5" action="dashboard" method="get">
-                <div class="space-y-1.5">
+            <form class="space-y-5" action="<?= site_url('login') ?>" method="post">
+
+            <?= csrf_field() ?>
+
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <?= esc(session()->getFlashdata('error')) ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('success')) : ?>
+                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    <?= esc(session()->getFlashdata('success')) ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="space-y-1.5">
+                <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                    Alamat Email
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    value="<?= old('email') ?>"
+                    placeholder="nama@mahasiswa.ac.id"
+                    autocomplete="email"
+                    required
+                    class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3.5 text-sm font-medium placeholder-zinc-400 text-zinc-800 transition-all focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10">
+            </div>
+
+            <div class="space-y-1.5">
+                <div class="flex justify-between items-center">
                     <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                        Alamat Email
+                        Kata Sandi
                     </label>
-                    <input
-                        type="text"
-                        placeholder="nama@mahasiswa.ac.id"
-                        class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3.5 text-sm font-medium placeholder-zinc-400 text-zinc-800 transition-all focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10">
+
+                    <a href="#" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+                        Lupa sandi?
+                    </a>
                 </div>
 
-                <div class="space-y-1.5">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                            Kata Sandi
-                        </label>
-                        <a href="#" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
-                            Lupa sandi?
-                        </a>
-                    </div>
-                    <input
-                        type="password"
-                        placeholder="••••••••"
-                        class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3.5 text-sm font-medium placeholder-zinc-400 text-zinc-800 transition-all focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10">
-                </div>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    required
+                    class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3.5 text-sm font-medium placeholder-zinc-400 text-zinc-800 transition-all focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10">
+            </div>
 
-                <div class="flex items-center justify-between pt-1">
-                    <label class="flex items-center gap-2.5 cursor-pointer select-none">
-                        <input type="checkbox" class="w-4 h-4 rounded text-emerald-600 border-zinc-300 focus:ring-emerald-500/20 accent-emerald-600">
-                        <span class="text-xs font-medium text-zinc-600">
-                            Biarkan saya tetap masuk
-                        </span>
-                    </label>
-                </div>
+            <div class="flex items-center justify-between pt-1">
+                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                        type="checkbox"
+                        name="remember"
+                        value="1"
+                        class="w-4 h-4 rounded text-emerald-600 border-zinc-300 focus:ring-emerald-500/20 accent-emerald-600">
+
+                    <span class="text-xs font-medium text-zinc-600">
+                        Biarkan saya tetap masuk
+                    </span>
+                </label>
+            </div>
+
+           <div class="grid grid-cols-2 gap-3 pt-2">
+
+                <a href="<?= site_url('/') ?>"
+                   class="flex items-center justify-center border border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-700 py-3.5 rounded-xl text-sm font-semibold transition-all">
+                    Kembali
+                </a>
 
                 <button
-                    class="w-full bg-zinc-950 hover:bg-zinc-900 text-white py-3.5 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-sm active:scale-[0.99]">
-                    Masuk ke Platform
+                    type="submit"
+                    class="bg-zinc-950 hover:bg-zinc-900 text-white py-3.5 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-sm active:scale-[0.99]">
+                    Masuk
                 </button>
-            </form>
+
+            </div>
+        </form>
 
           <!--   <div class="flex items-center my-6">
                 <div class="flex-1 h-px bg-zinc-100"></div>

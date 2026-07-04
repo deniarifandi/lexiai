@@ -1,57 +1,11 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Lexi AI</title>
+<?= $this->extend('layouts/app') ?>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<?= $this->section('content') ?>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-
-<body class="bg-zinc-50 text-zinc-800 font-sans antialiased">
-
-<!-- Navbar -->
-<nav class="bg-white border-b border-zinc-200/60 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-        <div class="text-lg font-bold tracking-tight text-zinc-900 flex items-center gap-2">
-            <span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Lexi</span>
-            <span class="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">AI</span>
-        </div>
-
-        <div class="flex items-center gap-4">
-            <div class="text-right hidden sm:block">
-                <p class="font-semibold text-sm text-zinc-900 leading-tight">Budi Santoso</p>
-                <p class="text-xs text-zinc-400 font-medium tracking-wide mt-0.5">MAHASISWA PERTANIAN</p>
-            </div>
-            <a href="<?php echo base_url('') ?>">
-                <div class="w-10 h-10 rounded-xl bg-zinc-950 text-white flex items-center justify-center text-xs font-bold tracking-wider">
-                BS
-                </div>
-            </a>
-        </div>
-    </div>
-</nav>
-
-<div class="max-w-7xl mx-auto p-6">
     <div class="grid lg:grid-cols-12 gap-8">
 
         <!-- LEFT CONTENT (8 Cols) -->
-        <div class="lg:col-span-8 space-y-8">
+        <div class="lg:col-span-12 space-y-12">
 
             <!-- HERO BANNER (Futuristic Dark Concept) -->
             <div class="bg-[#090d16] rounded-2xl p-8 sm:p-10 text-white relative overflow-hidden border border-white/5 shadow-sm">
@@ -140,10 +94,14 @@
                     </div>
                 </div>
             </div>
+
+            
+
         </div>
 
         <!-- RIGHT SIDEBAR (4 Cols) -->
-        <div class="lg:col-span-4 space-y-6">
+        <?php if (false): ?>
+            <div class="lg:col-span-4 space-y-6">
 
             <!-- STATS PANEL -->
             <div class="grid grid-cols-2 gap-4">
@@ -213,10 +171,10 @@
                 </div>
             </div>
 
-        </div>
+        </div>    
+        <?php endif ?>
+        
 
     </div>
-</div>
 
-</body>
-</html>
+<?= $this->endSection() ?>

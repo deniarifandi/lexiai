@@ -41,5 +41,46 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
+
+        if (! session()->get('logged_in')) {
+
+    if (isset($_COOKIE['remember_me'])) {
+
+        [$selector, $token] = explode(':', $_COOKIE['remember_me']);
+
+        $db = db_connect();
+
+        $remember = $db->table('user_remember_tokens')
+            ->where('selector', $selector)
+            ->get()
+            ->getRowArray();
+
+        if (
+            $remember &&
+            strtotime($remember['expires_at']) > time() &&
+            hash_equals(
+                $remember['token_hash'],
+                hash('sha256', $token)
+            )
+        ) {
+
+            $user = $db->table('users')
+                ->where('id', $remember['user_id'])
+                ->get()
+                ->getRowArray();
+
+            if ($user) {
+
+                session()->regenerate();
+
+                session()->set([
+                    'user_id'   => $user['id'],
+                    'username'  => $user['username'],
+                    'logged_in' => true,
+                ]);
+            }
+        }
+    }
+}
     }
 }

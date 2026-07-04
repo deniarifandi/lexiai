@@ -35,7 +35,15 @@
                 <a href="#about" class="text-zinc-400 hover:text-white transition-colors">Tentang</a>
                 <a href="#modules" class="text-zinc-400 hover:text-white transition-colors">Modul</a>
                 <a href="#benefit" class="text-zinc-400 hover:text-white transition-colors">Manfaat</a>
-                <a href="<?= base_url('login') ?>" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">Login</a>
+                <a href="<?= site_url('login') ?>"
+                   class="text-white hover:text-emerald-400 transition">
+                    Login
+                </a>
+
+                <a href="<?= site_url('register') ?>"
+                   class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold">
+                    Daftar
+                </a>
             </div>
         </div>
     </nav>
@@ -238,9 +246,11 @@
                 <h2 class="text-4xl md:text-5xl font-extrabold text-zinc-900 tracking-tight">Siap Memulai Transformasi Akademik Anda?</h2>
                 <p class="text-zinc-600 max-w-xl mx-auto font-light">Dapatkan akses instan ke seluruh modul simulasi cerdas LexiAI sekarang.</p>
                 <div>
-                    <button class="bg-zinc-950 hover:bg-zinc-900 text-white px-10 py-4 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-xl">
-                        Mulai Sekarang
-                    </button>
+                    <a href="<?= site_url('login') ?>">
+                        <button class="bg-zinc-950 hover:bg-zinc-900 text-white px-10 py-4 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-xl">
+                                Masuk ke Platform
+                        </button>
+                     </a>
                 </div>
             </div>
         </section>
