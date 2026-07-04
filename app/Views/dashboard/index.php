@@ -20,11 +20,11 @@
                     <p class="text-zinc-400 text-sm leading-relaxed font-light">
                         Lanjutkan modul integrasi bahasa hari ini. Sistem AI telah memperbarui dasbor rekomendasi personal Anda berdasarkan performa kemarin.
                     </p>
-                    <div class="pt-2">
+                   <!--  <div class="pt-2">
                         <button class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 py-3 rounded-xl font-semibold text-xs tracking-wider uppercase transition-all duration-300">
                             Lanjutkan Belajar
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -43,7 +43,7 @@
                             <div class="space-y-1 w-full">
                                 <h4 class="text-base font-bold text-zinc-900">Reading Comprehension</h4>
                                 <div class="flex items-center gap-4">
-                                    <p class="text-xs text-zinc-400 font-medium shrink-0">18 / 25 Selesai</p>
+                                    <p class="text-xs text-zinc-400 font-medium shrink-0">0 / 0 Selesai</p>
                                     <div class="w-full sm:w-32 bg-zinc-100 rounded-full h-1.5">
                                         <div class="bg-emerald-500 h-1.5 rounded-full" style="width:72%"></div>
                                     </div>
@@ -62,7 +62,7 @@
                             <div class="space-y-1 w-full">
                                 <h4 class="text-base font-bold text-zinc-900">Vocabulary in Context</h4>
                                 <div class="flex items-center gap-4">
-                                    <p class="text-xs text-zinc-400 font-medium shrink-0">150 Istilah</p>
+                                    <p class="text-xs text-zinc-400 font-medium shrink-0">0 Istilah</p>
                                     <div class="w-full sm:w-32 bg-zinc-100 rounded-full h-1.5">
                                         <div class="bg-emerald-500 h-1.5 rounded-full" style="width:60%"></div>
                                     </div>
@@ -79,9 +79,9 @@
                         <div class="flex items-center gap-4 w-full sm:w-auto">
                             <div class="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-700 font-bold text-sm shrink-0">03</div>
                             <div class="space-y-1 w-full">
-                                <h4 class="text-base font-bold text-zinc-900">AI Pronunciation Assessment</h4>
+                                <h4 class="text-base font-bold text-zinc-900">AI Pronunciation</h4>
                                 <div class="flex items-center gap-4">
-                                    <p class="text-xs text-emerald-600 font-bold shrink-0">AI Score: 89</p>
+                                    <p class="text-xs text-emerald-600 font-bold shrink-0">Score: 89</p>
                                     <div class="w-full sm:w-32 bg-zinc-100 rounded-full h-1.5">
                                         <div class="bg-emerald-500 h-1.5 rounded-full" style="width:89%"></div>
                                     </div>
