@@ -85,10 +85,18 @@
                             </div>
                         </div>
                         <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-zinc-100 pt-3 sm:pt-0">
-                            <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1 hidden sm:block">Selesai</span>
+                            <?php if ($row['highest_score'] > 0): ?>
+    <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1 hidden sm:block">
+        Skor: <?= round($row['highest_score'], 1) ?>
+    </span>
+<?php else: ?>
+    <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1 hidden sm:block">
+        Belum Dimulai
+    </span>
+<?php endif; ?>
                             <a href="<?= site_url('student/reading/start/'.$row['id']) ?>"
    class="w-full sm:w-auto bg-zinc-950 hover:bg-zinc-800 text-white border border-zinc-900 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-center">
-   Start Session
+    <?= $row['highest_score'] > 0 ? 'Retake' : 'Start Session' ?>
 </a>
                      </div>
                  </div>

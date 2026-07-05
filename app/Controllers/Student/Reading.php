@@ -37,7 +37,7 @@ class Reading extends BaseController
                 MAX(total_score) AS highest_score
             FROM reading_attempts
             WHERE user_id = {$userId}
-              AND status = ''
+              AND status = 'completed'
             GROUP BY material_id
         ) ra
     ";
