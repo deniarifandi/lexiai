@@ -6,15 +6,17 @@
 
 $ai = [];
 
-if (!empty($answer['ai_result'])) {
-    $ai = json_decode($answer['ai_result'], true);
+if (!empty($answer['ai_feedback'])) {
+    $ai = json_decode($answer['ai_feedback'], true);
+
+    if (!is_array($ai)) {
+        $ai = [];
+    }
 }
 
-$score = $ai['score'] ?? ($answer['ai_score'] ?? 0);
-
+$score = (int) ($ai['score'] ?? ($answer['ai_score'] ?? 0));
 $level = $ai['level'] ?? 'Good';
-
-$summary = $ai['summary'] ?? ($answer['ai_feedback'] ?? 'No feedback available.');
+$summary = $ai['overall'] ?? 'No feedback available.';
 
 $percent = max(0, min(100, $score));
 $degree = ($percent / 100) * 360;
@@ -174,7 +176,7 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
                     <div class="bg-zinc-50 border border-zinc-100 rounded-xl p-4">
 
                         <p class="text-sm text-zinc-700 leading-7 whitespace-pre-line">
-                            <?= nl2br(esc($answer['answer'])) ?>
+                            <?= esc(trim($answer['answer'])) ?>
                         </p>
 
                     </div>
@@ -196,14 +198,8 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
                     <div class="bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl p-4">
 
                         <p class="text-sm text-zinc-700 leading-7 whitespace-pre-line">
-
-                            <?= nl2br(esc(
-                                $ai['suggested_answer']
-                                ?? $answer['reference_answer']
-                                ?? '-'
-                            )) ?>
-
-                        </p>
+    <?= esc(trim($ai['recommended_answer'] ?? $answer['reference_answer'] ?? '-')) ?>
+</p>
 
                     </div>
 

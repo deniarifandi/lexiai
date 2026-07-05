@@ -283,7 +283,136 @@ public function start($materialId)
     ]);
 }
 
-   public function saveAnswer()
+public function saveAnswer()
+{
+    $userId     = session()->get('user_id');
+    $attemptId  = $this->request->getPost('attempt_id');
+    $questionId = $this->request->getPost('question_id');
+    $answer      = trim($this->request->getPost('answer'));
+
+    $attempt = $this->attemptModel
+        ->where('id', $attemptId)
+        ->where('user_id', $userId)
+        ->first();
+
+    if (!$attempt) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
+
+    if ($attempt['status'] === 'completed') {
+        return redirect()->to(site_url('student/reading/result/' . $attemptId));
+    }
+
+    $question = $this->questionModel->find($questionId);
+
+    if (!$question) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
+
+    $existing = $this->answerModel
+        ->where('attempt_id', $attemptId)
+        ->where('question_id', $questionId)
+        ->first();
+
+    if ($existing) {
+        $answerId = $existing['id'];
+
+        $this->answerModel->update($answerId, [
+            'answer' => $answer,
+        ]);
+    } else {
+        $answerId = $this->answerModel->insert([
+            'attempt_id'  => $attemptId,
+            'question_id' => $questionId,
+            'answer'      => $answer,
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | AI Evaluation
+    |--------------------------------------------------------------------------
+    */
+
+    $systemPrompt = <<<PROMPT
+You are an English Reading Comprehension evaluator.
+
+Evaluate the student's answer based on:
+1. Reading comprehension accuracy.
+2. Completeness.
+3. Grammar.
+4. Vocabulary.
+5. Sentence clarity.
+
+Return ONLY valid JSON in this format:
+
+{
+    "score": "1-100",
+    "feedback": "",
+    "strengths": [],
+    "improvements": [],
+    "recommended_answer": ""
+}
+PROMPT;
+
+    $userPrompt = <<<PROMPT
+Question:
+{$question['question']}
+
+Reference Answer:
+{$question['reference_answer']}
+
+Student Answer:
+{$answer}
+PROMPT;
+
+    $ai = new \App\Services\AnthropicService();
+
+    $response = $ai->chat($systemPrompt, [
+        [
+            'role' => 'user',
+            'content' => $userPrompt,
+        ]
+    ]);
+
+    // Remove markdown code fences if present
+   $response = trim($response);
+
+   $response = trim($response);
+if (preg_match('/\{.*\}/s', $response, $matches)) {
+    $response = $matches[0];
+}   
+$result = json_decode($response, true);
+
+if (json_last_error() !== JSON_ERROR_NONE) {
+    log_message('error', json_last_error_msg());
+
+    $result = [
+        'score' => 0,
+        'feedback' => 'Evaluation failed.',
+        'strengths' => [],
+        'improvements' => [],
+        'recommended_answer' => '',
+    ];
+}
+
+
+
+
+   $this->answerModel->update($answerId, [
+    'ai_score' => (int)$result['score'],
+    'ai_feedback' => json_encode([
+        'overall' => $result['feedback'],
+        'strengths' => $result['strengths'],
+        'improvements' => $result['improvements'],
+        'recommended_answer' => $result['recommended_answer'],
+    ], JSON_UNESCAPED_UNICODE),
+]);
+
+    return redirect()->to(site_url('student/reading/feedback/' . $answerId));
+}
+
+   public function saveAnswerOLD()
 {
     $userId     = session()->get('user_id');
     $attemptId  = $this->request->getPost('attempt_id');

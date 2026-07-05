@@ -5,7 +5,8 @@ namespace App\Services;
 class AnthropicService
 {
     protected string $apiKey;
-    protected string $model = 'gemini-2.5-flash';
+    protected string $model = 'gemini-2.5-flash-lite';
+    // protected string $model = 'gemini-2.5-flash-lite-preview-09-2025';
 
     public function __construct()
     {
@@ -46,7 +47,7 @@ class AnthropicService
             'contents' => $contents,
             'generationConfig' => [
                 'temperature' => 0.7,
-                'maxOutputTokens' => 500,
+                'maxOutputTokens' => 2000,
             ]
         ];
 
