@@ -7,6 +7,7 @@ use App\Models\ReadingMaterialModel;
 use App\Models\ReadingAttemptModel;
 use App\Models\ReadingAnswerModel;
 use App\Models\ReadingQuestionModel;
+use App\Services\AnthropicService;
 
 class Reading extends BaseController
 {
@@ -389,4 +390,60 @@ public function start($materialId)
         'isFinished'        => $isFinished,
     ]);
 }
+
+
+    public function chat()
+    {
+        $userId    = session()->get('user_id');
+        $answerId  = $this->request->getPost('answer_id');
+        $message   = trim($this->request->getPost('message'));
+        $history   = $this->request->getPost('history') ?? []; // [{role, content}, ...]
+
+        if (!$message) {
+            return $this->response->setJSON(['error' => 'Empty message'])->setStatusCode(400);
+        }
+
+        $answer = $this->answerModel
+            ->select('
+                reading_answers.*,
+                reading_questions.question,
+                reading_questions.reference_answer,
+                reading_attempts.user_id
+            ')
+            ->join('reading_questions', 'reading_questions.id = reading_answers.question_id')
+            ->join('reading_attempts', 'reading_attempts.id = reading_answers.attempt_id')
+            ->where('reading_answers.id', $answerId)
+            ->first();
+
+        if (!$answer || (int) $answer['user_id'] !== (int) $userId) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $systemPrompt = "You are a helpful English tutor explaining feedback on a student's reading comprehension essay answer.\n\n"
+            . "Question: {$answer['question']}\n\n"
+            . "Student's answer: {$answer['answer']}\n\n"
+            . "AI score given: {$answer['ai_score']}/100\n"
+            . "AI feedback given: {$answer['ai_feedback']}\n\n"
+            . "Reference answer: " . ($answer['reference_answer'] ?? 'N/A') . "\n\n"
+            . "Answer the student's follow-up questions about this feedback clearly and encouragingly, "
+            . "in simple English suitable for an agriculture-student learner. Keep replies concise.";
+
+        $messages = [];
+
+        foreach ($history as $turn) {
+            if (!empty($turn['role']) && !empty($turn['content'])) {
+                $messages[] = [
+                    'role'    => $turn['role'] === 'assistant' ? 'assistant' : 'user',
+                    'content' => $turn['content'],
+                ];
+            }
+        }
+
+        $messages[] = ['role' => 'user', 'content' => $message];
+
+        $ai = new AnthropicService();
+        $reply = $ai->chat($systemPrompt, $messages);
+
+        return $this->response->setJSON(['reply' => $reply]);
+    }
 }

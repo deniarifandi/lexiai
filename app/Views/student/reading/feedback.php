@@ -328,6 +328,105 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
                 </div>
 
             </div>
+
+
+            <!-- ASK AI ABOUT THIS FEEDBACK -->
+<div class="bg-white border border-zinc-200 rounded-xl shadow-sm">
+
+    <div class="px-6 py-4 border-b border-zinc-100">
+        <h3 class="text-xs uppercase tracking-widest font-bold text-zinc-500">
+            Ask AI About This Feedback
+        </h3>
+    </div>
+
+    <div id="chat-log" class="p-6 space-y-3 max-h-80 overflow-y-auto text-sm"></div>
+
+    <div class="border-t p-4 flex gap-2">
+        <input id="chat-input" type="text"
+               class="flex-1 rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900"
+               placeholder="Ask a question, e.g. 'why is my grammar wrong?'">
+        <button id="chat-send"
+                class="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+            Send
+        </button>
+    </div>
+
+</div>
+
+<script>
+(function () {
+    const answerId = <?= (int) $answer['id'] ?>;
+    const csrfName = '<?= csrf_token() ?>';
+    const csrfHash = '<?= csrf_hash() ?>';
+
+    const log = document.getElementById('chat-log');
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+
+    let history = []; // in-memory only, resets on reload
+
+    function addBubble(role, text) {
+        const div = document.createElement('div');
+        div.className = role === 'user'
+            ? 'text-right'
+            : 'text-left';
+
+        div.innerHTML = `
+            <span class="inline-block px-3 py-2 rounded-xl text-sm ${
+                role === 'user'
+                    ? 'bg-zinc-900 text-white'
+                    : 'bg-zinc-50 text-zinc-700 border border-zinc-100'
+            }">${text}</span>
+        `;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const message = input.value.trim();
+        if (!message) return;
+
+        addBubble('user', message);
+        input.value = '';
+        sendBtn.disabled = true;
+
+        try {
+            const formData = new FormData();
+            formData.append('answer_id', answerId);
+            formData.append('message', message);
+            formData.append(csrfName, csrfHash);
+            history.forEach((h, i) => {
+                formData.append(`history[${i}][role]`, h.role);
+                formData.append(`history[${i}][content]`, h.content);
+            });
+
+            const res = await fetch('<?= site_url('student/reading/chat') ?>', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await res.json();
+            const reply = data.reply || 'Sorry, something went wrong 1.';
+
+            addBubble('assistant', reply);
+
+            history.push({ role: 'user', content: message });
+            history.push({ role: 'assistant', content: reply });
+
+        } catch (e) {
+            addBubble('assistant', 'Sorry, something went wrong.');
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+})();
+</script>
+
                     </div>
 
         <!-- RIGHT SIDEBAR -->

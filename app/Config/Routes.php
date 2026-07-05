@@ -98,6 +98,8 @@ $routes->group('student', function ($routes) {
     $routes->get('reading/result/(:num)', 'Student\Reading::result/$1');
     $routes->post('reading/save-answer', 'Student\Reading::saveAnswer');
 	$routes->get('reading/feedback/(:num)','Student\Reading::feedback/$1');
+	
+$routes->post('reading/chat', 'Student\Reading::chat');
 });
 
 $routes->get('student/reading/start/(:num)', 'Student\Reading::start/$1');
