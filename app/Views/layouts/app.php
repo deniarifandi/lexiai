@@ -109,6 +109,8 @@
 
 <div class="mx-auto p-6" style="max-width:100rem">
 
+    <?= $this->include('components/flash_message') ?>
+
     <?= $this->renderSection('content') ?>
 
 </div>

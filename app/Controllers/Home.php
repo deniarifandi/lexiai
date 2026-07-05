@@ -16,7 +16,7 @@ class Home extends BaseController
     // }
 
     public function dashboard(){
-        return view('dashboard/index');
+        return view('student/modules');
     }
 
     public function readingDashboard(){

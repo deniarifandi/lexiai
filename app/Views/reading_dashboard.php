@@ -16,7 +16,7 @@
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.12),transparent_45%)]"></div>
         
         <div class="relative z-10 flex flex-col lg:flex-row justify-between gap-8 items-start lg:items-center">
-            <div class="max-w-2xl space-y-4">
+            <div class=" space-y-4">
                 <div class="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider text-emerald-400 uppercase">
                     Modul 01
                 </div>
@@ -26,15 +26,10 @@
                 <p class="text-zinc-400 text-sm leading-relaxed font-light">
                     Pertajam kemampuan pemahaman bacaan akademik melalui artikel berbasis sains pertanian global. Analisis teks secara mendalam, jawab esai pendek, dan dapatkan evaluasi sintaksis langsung dari kecerdasan buatan.
                 </p>
-                <div class="pt-2">
-                    <button class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 py-3 rounded-xl font-semibold text-xs tracking-wider uppercase transition-all duration-300">
-                        Lanjutkan Pelajaran
-                    </button>
-                </div>
             </div>
 
             <!-- Stats Analytics Box -->
-            <div class="bg-white/[0.02] border border-white/10 rounded-xl p-6 w-full lg:w-80 backdrop-blur-sm space-y-6">
+            <!-- <div class="bg-white/[0.02] border border-white/10 rounded-xl p-6 w-full lg:w-80 backdrop-blur-sm space-y-6">
                 <div>
                     <div class="flex justify-between items-end">
                         <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Total Progres</p>
@@ -63,7 +58,7 @@
                         <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">Durasi Belajar</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -161,7 +156,7 @@
         <div class="lg:col-span-4 space-y-6">
             
             <!-- AI RECOMMENDATION -->
-            <div class="bg-white border border-zinc-200/60 rounded-xl p-6 space-y-4">
+           <!--  <div class="bg-white border border-zinc-200/60 rounded-xl p-6 space-y-4">
                 <h3 class="text-xs font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> AI Recommendation
                 </h3>
@@ -171,7 +166,7 @@
                         Berdasarkan riwayat pengerjaan Anda, pemahaman bacaan kontekstual Anda terus meningkat secara linear. AI menyarankan untuk merampungkan bab ini guna menstabilkan retensi metrik pemahaman Anda.
                     </p>
                 </div>
-            </div>
+            </div> -->
 
             <!-- LEARNING TIPS (Clean Minimalism) -->
             <div class="bg-white border border-zinc-200/60 rounded-xl p-6 space-y-4">
@@ -185,7 +180,7 @@
             </div>
 
             <!-- ACHIEVEMENT PANEL -->
-            <div class="bg-zinc-950 text-white border border-white/5 rounded-xl p-6 relative overflow-hidden">
+           <!--  <div class="bg-zinc-950 text-white border border-white/5 rounded-xl p-6 relative overflow-hidden">
                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.08),transparent_40%)]"></div>
                 <div class="relative z-10 space-y-3">
                     <span class="text-xs bg-white/10 text-zinc-300 border border-white/10 px-2 py-0.5 rounded font-mono">TARGET BADGE</span>
@@ -195,7 +190,7 @@
                     </p>
                 </div>
             </div>
-
+ -->
         </div>
 
     </div>

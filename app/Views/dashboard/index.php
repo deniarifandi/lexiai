@@ -15,7 +15,7 @@
                         Sesi Aktif
                     </div>
                     <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                        Halo, Budi.
+                        Halo,  <?= esc(session('username')) ?>.
                     </h2>
                     <p class="text-zinc-400 text-sm leading-relaxed font-light">
                         Lanjutkan modul integrasi bahasa hari ini. Sistem AI telah memperbarui dasbor rekomendasi personal Anda berdasarkan performa kemarin.

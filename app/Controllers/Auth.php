@@ -47,6 +47,7 @@ class Auth extends BaseController
             'user_id'   => $user['id'],
             'username'  => $user['username'],
             'email'     => $user['email'],
+            'role'      => $user['role'],
             'logged_in' => true,
         ]);
 
@@ -80,6 +81,10 @@ class Auth extends BaseController
         $userModel->update($user['id'], [
             'last_login' => date('Y-m-d H:i:s'),
         ]);
+
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/admin/dashboard');
+        }
 
         return redirect()->to('/dashboard');
     }

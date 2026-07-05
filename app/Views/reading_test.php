@@ -1,64 +1,18 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading Test - AgriEnglish AI</title>
+<?= $this->extend('layouts/app') ?>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<?= $this->section('content') ?>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+<div class="space-y-6">
 
-    <style>
-        /* Sembunyikan scrollbar bawaan tapi tetap bisa di-scroll */
-        .custom-scroll::-webkit-scrollbar {
-            width: 5px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e4e4e7;
-            border-radius: 10px;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background: #d4d4d8;
-        }
-        textarea {
-            resize: none;
-        }
-    </style>
-</head>
-
-<body class="bg-zinc-50 text-zinc-800 font-sans antialiased">
-
-<!-- Navbar -->
-<nav class="bg-white border-b border-zinc-200/60 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
         <a href="<?php echo base_url('reading-dashboard') ?>" class="text-xs font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-900 inline-flex items-center gap-2 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Dasbor
+            Kembali ke Reading List
         </a>
-        <div class="text-[10px] bg-zinc-950 text-white px-2.5 py-1 rounded-md font-mono tracking-widest">
-            LIVE SESSION
+        <div class="text-[10px] bg-zinc-950 text-white px-2.5 py-1 rounded-md font-mono tracking-widest uppercase">
+           Reading Test
         </div>
     </div>
-</nav>
-
-<div class="max-w-7xl mx-auto p-6 space-y-6">
 
     <!-- TOP PROFILE & PROGRESS PANEL -->
     <div class="bg-white border border-zinc-200/60 rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4 shadow-sm">
@@ -179,34 +133,11 @@
             </div>
 
             <!-- METADATA INFORMATION BOX -->
-            <div class="bg-[#090d16] text-white border border-white/5 rounded-xl p-5 space-y-4 relative overflow-hidden">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.06),transparent_40%)]"></div>
-                <h4 class="text-xs font-bold tracking-widest text-zinc-400 uppercase relative z-10">Informasi Sesi</h4>
-                
-                <div class="grid grid-cols-2 gap-4 text-xs relative z-10 font-light text-zinc-400">
-                    <div class="border-b border-white/5 pb-2">
-                        <p class="text-[10px] uppercase text-zinc-500 font-medium">Tingkat Kesulitan</p>
-                        <p class="font-bold text-white mt-0.5 text-sm">Medium</p>
-                    </div>
-                    <div class="border-b border-white/5 pb-2">
-                        <p class="text-[10px] uppercase text-zinc-500 font-medium">Alokasi Waktu</p>
-                        <p class="font-bold text-white mt-0.5 text-sm">15 Menit</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] uppercase text-zinc-500 font-medium">Total Soal</p>
-                        <p class="font-bold text-white mt-0.5 text-sm">5 Butir Esai</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] uppercase text-zinc-500 font-medium">Evaluasi Mesin AI</p>
-                        <p class="font-bold text-emerald-400 mt-0.5 text-sm">Aktif</p>
-                    </div>
-                </div>
-            </div>
+           
 
         </div>
 
     </div>
 </div>
 
-</body>
-</html>
+<?= $this->endSection() ?>  
