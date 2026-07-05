@@ -554,7 +554,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
             . "AI score given: {$answer['ai_score']}/100\n"
             . "AI feedback given: {$answer['ai_feedback']}\n\n"
             . "Reference answer: " . ($answer['reference_answer'] ?? 'N/A') . "\n\n"
-            . "Answer the student's follow-up questions about this feedback clearly and encouragingly, "
+            . "Student's focus are learning english, not the agriculture. Untuk saran, berikan saran tentang bahasa, bukan tentang pertaniannya. Answer the student's follow-up questions about this feedback clearly and encouragingly, "
             . "in simple English suitable for an agriculture-student learner. Keep replies concise.";
 
         $messages = [];
