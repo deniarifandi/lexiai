@@ -34,7 +34,7 @@
 
     <!-- MAIN CONTENT GRID -->
     <div class="grid lg:grid-cols-12 gap-8 pt-4">
-        
+
         <!-- LEFT: LESSON LIST (8 Cols) -->
         <div class="lg:col-span-8 space-y-4">
             <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4">Daftar Pelajaran Tersedia</h3>
@@ -73,7 +73,7 @@
                                     <?= esc($row['title']) ?>
                                 </h4>
                                 <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-zinc-400 font-medium">
-                                 
+
                                     <span class="<?= $badge[$row['level']] ?> font-semibold px-1.5 py-0.5 rounded">
 
                                         <?= ucfirst($row['level']) ?>
@@ -84,32 +84,49 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-zinc-100 pt-3 sm:pt-0">
-                            <?php if ($row['highest_score'] > 0): ?>
-    <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1 hidden sm:block">
-        Skor: <?= round($row['highest_score'], 1) ?>
-    </span>
-<?php else: ?>
-    <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1 hidden sm:block">
-        Belum Dimulai
-    </span>
-<?php endif; ?>
+
+                            <?php if ($row['has_in_progress']): ?>
+                                <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1 hidden sm:block">
+                                    Sedang Berjalan
+                                </span>
+                            <?php elseif ($row['highest_score'] > 0): ?>
+                                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1 hidden sm:block">
+                                    Skor: <?= round($row['highest_score'], 1) ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1 hidden sm:block">
+                                    Belum Dimulai
+                                </span>
+                            <?php endif; ?>
+
                             <a href="<?= site_url('student/reading/start/'.$row['id']) ?>"
-   class="w-full sm:w-auto bg-zinc-950 hover:bg-zinc-800 text-white border border-zinc-900 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-center">
-    <?= $row['highest_score'] > 0 ? 'Retake' : 'Start Session' ?>
-</a>
-                     </div>
-                 </div>
+                             class="w-full sm:w-auto bg-zinc-950 hover:bg-zinc-800 text-white border border-zinc-900 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-center">
+                             <?php
+                             if ($row['has_in_progress']) {
+                                echo 'Lanjutkan Test';
+                            } elseif ($row['highest_score'] > 0) {
+                                echo 'Ulangi Test';
+                            } else {
+                                echo 'Mulai Test';
+                            }
+                            ?>
+                        </a>
 
-             <?php endforeach; ?>
-             
+                    </div>
 
-         <?php endforeach; ?>
+                </div>
 
-     </div>
-     <!-- RIGHT: SIDEBAR INTELLIGENCE (4 Cols) -->
-     <div class="lg:col-span-4 space-y-6">
-        
+            <?php endforeach; ?>
+
+
+        <?php endforeach; ?>
+
+    </div>
+    <!-- RIGHT: SIDEBAR INTELLIGENCE (4 Cols) -->
+    <div class="lg:col-span-4 space-y-6">
+
 
         <!-- LEARNING TIPS (Clean Minimalism) -->
         <div class="bg-white border border-zinc-200/60 rounded-xl p-6 space-y-4">

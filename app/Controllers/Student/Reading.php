@@ -34,10 +34,10 @@ class Reading extends BaseController
         (
             SELECT
                 material_id,
-                MAX(total_score) AS highest_score
+                MAX(CASE WHEN status = 'completed' THEN total_score END) AS highest_score,
+                MAX(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) AS has_in_progress
             FROM reading_attempts
             WHERE user_id = {$userId}
-              AND status = 'completed'
             GROUP BY material_id
         ) ra
     ";
@@ -45,11 +45,11 @@ class Reading extends BaseController
     $materials = [];
 
     foreach (['beginner', 'intermediate', 'advanced'] as $level) {
-
         $materials[$level] = $this->readingMaterial
             ->select('
                 reading_materials.*,
-                COALESCE(ra.highest_score,0) AS highest_score
+                COALESCE(ra.highest_score, 0) AS highest_score,
+                COALESCE(ra.has_in_progress, 0) AS has_in_progress
             ')
             ->selectCount('reading_questions.id', 'total_questions')
             ->join('reading_questions', 'reading_questions.material_id = reading_materials.id', 'left')
