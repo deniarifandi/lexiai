@@ -12,7 +12,31 @@ if (!empty($answer['ai_feedback'])) {
 }
 
 $score = (int) ($ai['score'] ?? ($answer['ai_score'] ?? 0));
-$level = $ai['level'] ?? 'Good';
+
+function getScoreLevel(int $score): string
+{
+    return match (true) {
+        $score >= 90 => 'Excellent',
+        $score >= 75 => 'Good',
+        $score >= 60 => 'Fair',
+        $score >= 40 => 'Needs Improvement',
+        default       => 'Poor',
+    };
+}
+
+function getScoreLevelColor(string $level): string
+{
+    return match ($level) {
+        'Excellent'          => 'text-emerald-600',
+        'Good'               => 'text-teal-600',
+        'Fair'               => 'text-amber-600',
+        'Needs Improvement'  => 'text-orange-600',
+        default              => 'text-red-600', // Poor
+    };
+}
+
+$level = getScoreLevel($score);
+
 $summary = $ai['overall'] ?? 'No feedback available.';
 
 $percent = max(0, min(100, $score));
@@ -206,7 +230,7 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
                     </div>
                     <div class="flex justify-between py-1 lg:border-none">
                         <span class="text-zinc-500">Level Badge</span>
-                        <span class="font-bold text-emerald-600"><?= esc($level) ?></span>
+                        <span class="font-bold <?= getScoreLevelColor($level) ?>"><?= esc($level) ?></span>
                     </div>
                 </div>
             </div>
