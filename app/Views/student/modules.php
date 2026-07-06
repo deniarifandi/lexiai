@@ -12,11 +12,6 @@
                         Hello,  <?= esc(session('username')) ?>.
                     </h2>
                    <p id="motivation" class="text-zinc-400 text-sm leading-relaxed font-light"></p>
-                   <!--  <div class="pt-2">
-                        <button class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 py-3 rounded-xl font-semibold text-xs tracking-wider uppercase transition-all duration-300">
-                            Lanjutkan Belajar
-                        </button>
-                    </div> -->
                 </div>
             </div>
 
@@ -30,11 +25,9 @@
         </p>
     </div>
 
-
-
     <div class="grid lg:grid-cols-3 gap-6">
 
-        <!-- Reading -->
+        <!-- Reading (active) -->
         <a href="<?= base_url('student/reading') ?>"
            class="group bg-white rounded-2xl border border-zinc-200 p-7 hover:border-zinc-900 hover:shadow-lg transition">
 
@@ -69,10 +62,12 @@
 
         </a>
 
-        <!-- Vocabulary -->
+        <!-- Vocabulary (disabled / under construction) -->
+        <div class="relative bg-white rounded-2xl border border-zinc-200 p-7 opacity-60 cursor-not-allowed select-none">
 
-        <a href="<?= base_url('student/vocabulary') ?>"
-           class="group bg-white rounded-2xl border border-zinc-200 p-7 hover:border-zinc-900 hover:shadow-lg transition">
+            <span class="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
+                Coming Soon
+            </span>
 
             <div class="flex justify-between items-start">
 
@@ -85,30 +80,28 @@
 
                 </div>
 
-                <span class="text-xs uppercase tracking-widest text-zinc-400">
-                    Module 2
-                </span>
-
             </div>
 
-            <h2 class="text-xl font-bold mt-6">
+            <h2 class="text-xl font-bold mt-6 text-zinc-500">
                 Vocabulary in Context
             </h2>
 
-            <p class="text-sm text-zinc-500 mt-3 leading-relaxed">
+            <p class="text-sm text-zinc-400 mt-3 leading-relaxed">
                 Learn agricultural vocabulary, meanings, examples, pronunciation, and AI-assisted exercises.
             </p>
 
-            <div class="mt-6 text-sm font-semibold text-zinc-900">
-                Start →
+            <div class="mt-6 text-sm font-semibold text-zinc-400">
+                Under Construction
             </div>
 
-        </a>
+        </div>
 
-        <!-- Pronunciation -->
+        <!-- Pronunciation (disabled / under construction) -->
+        <div class="relative bg-white rounded-2xl border border-zinc-200 p-7 opacity-60 cursor-not-allowed select-none">
 
-        <a href="<?= base_url('student/pronunciation') ?>"
-           class="group bg-white rounded-2xl border border-zinc-200 p-7 hover:border-zinc-900 hover:shadow-lg transition">
+            <span class="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
+                Coming Soon
+            </span>
 
             <div class="flex justify-between items-start">
 
@@ -121,25 +114,21 @@
 
                 </div>
 
-                <span class="text-xs uppercase tracking-widest text-zinc-400">
-                    Module 3
-                </span>
-
             </div>
 
-            <h2 class="text-xl font-bold mt-6">
+            <h2 class="text-xl font-bold mt-6 text-zinc-500">
                 Pronunciation
             </h2>
 
-            <p class="text-sm text-zinc-500 mt-3 leading-relaxed">
+            <p class="text-sm text-zinc-400 mt-3 leading-relaxed">
                 Practice speaking agricultural vocabulary and receive AI pronunciation feedback.
             </p>
 
-            <div class="mt-6 text-sm font-semibold text-zinc-900">
-                Start →
+            <div class="mt-6 text-sm font-semibold text-zinc-400">
+                Under Construction
             </div>
 
-        </a>
+        </div>
 
     </div>
 
