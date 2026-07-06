@@ -261,6 +261,7 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
     const sendBtn = document.getElementById('chat-send');
 
     let history = [];
+    let typingEl = null;
 
     function escapeHtml(str) {
         const div = document.createElement('div');
@@ -293,6 +294,27 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
         log.scrollTop = log.scrollHeight;
     }
 
+    function showTyping() {
+        typingEl = document.createElement('div');
+        typingEl.className = 'text-left';
+        typingEl.innerHTML = `
+            <span class="inline-flex gap-1 items-center px-3 py-2.5 rounded-xl rounded-tl-none bg-white border border-zinc-200 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:0ms"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:150ms"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:300ms"></span>
+            </span>
+        `;
+        log.appendChild(typingEl);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function hideTyping() {
+        if (typingEl) {
+            typingEl.remove();
+            typingEl = null;
+        }
+    }
+
     async function sendMessage() {
         const message = input.value.trim();
         if (!message) return;
@@ -300,6 +322,9 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
         addBubble('user', message);
         input.value = '';
         sendBtn.disabled = true;
+        input.disabled = true;
+
+        showTyping();
 
         try {
             const formData = new FormData();
@@ -319,14 +344,18 @@ $wordCount = str_word_count(strip_tags($answer['answer']));
             const data = await res.json();
             const reply = data.reply || 'Sorry, something went wrong.';
 
+            hideTyping();
             addBubble('assistant', reply);
             history.push({ role: 'user', content: message });
             history.push({ role: 'assistant', content: reply });
 
         } catch (e) {
+            hideTyping();
             addBubble('assistant', 'Sorry, something went wrong.');
         } finally {
             sendBtn.disabled = false;
+            input.disabled = false;
+            input.focus();
         }
     }
 

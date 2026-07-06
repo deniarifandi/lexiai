@@ -163,6 +163,81 @@
 
             </form>
 
+            <!-- Add right before your closing </form> tag, or anywhere in the section -->
+<div id="submit-overlay"
+     class="hidden fixed inset-0 z-50 bg-white/80 backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-white border border-zinc-200 rounded-2xl shadow-lg p-8 w-[90%] max-w-sm text-center space-y-4">
+
+        <div class="mx-auto w-14 h-14 rounded-full border-4 border-zinc-100 border-t-emerald-500 animate-spin"></div>
+
+        <div>
+            <h3 class="font-bold text-zinc-900 text-sm">Evaluating your answer</h3>
+            <p id="overlay-msg" class="text-xs text-zinc-500 mt-1 transition-opacity duration-300">
+                Sending your answer to AI Tutor...
+            </p>
+        </div>
+
+        <div class="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+            <div id="overlay-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-700" style="width: 8%"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const form = document.querySelector('form[action*="save-answer"]');
+    const overlay = document.getElementById('submit-overlay');
+    const overlayMsg = document.getElementById('overlay-msg');
+    const overlayBar = document.getElementById('overlay-bar');
+    const submitBtn = form.querySelector('button');
+
+    const messages = [
+        'Sending your answer to AI Tutor...',
+        'Checking grammar and vocabulary...',
+        'Comparing with reference answer...',
+        'Almost done, preparing feedback...'
+    ];
+    let step = 0;
+    let msgInterval;
+
+    form.addEventListener('submit', function (e) {
+        const answer = form.querySelector('textarea[name="answer"]').value.trim();
+        if (!answer) return; // let native "required" validation handle it, don't lock UI
+
+        // Show overlay + block everything behind it
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Disable button to prevent double submit (form still submits normally first)
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        // Cycle fake progress messages/bar while we wait for the redirect
+        const widths = [8, 35, 65, 85, 95];
+        msgInterval = setInterval(function () {
+            step = Math.min(step + 1, messages.length - 1);
+            overlayMsg.textContent = messages[step];
+            overlayBar.style.width = widths[Math.min(step + 1, widths.length - 1)] + '%';
+        }, 1800);
+
+        // Do NOT preventDefault — let the real POST + redirect happen underneath
+    });
+
+    // Safety net: if user somehow navigates back to this page (bfcache),
+    // make sure the overlay isn't stuck visible.
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            clearInterval(msgInterval);
+        }
+    });
+})();
+</script>
+
         </div>
 
     </div>
