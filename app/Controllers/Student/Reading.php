@@ -45,7 +45,7 @@ class Reading extends BaseController
 
     $materials = [];
 
-    foreach (['beginner', 'intermediate', 'advanced'] as $level) {
+    foreach (['beginner','elementary', 'intermediate','upper', 'advanced','mastery'] as $level) {
         $materials[$level] = $this->readingMaterial
             ->select('
                 reading_materials.*,
