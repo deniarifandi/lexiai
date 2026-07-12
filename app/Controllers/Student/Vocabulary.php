@@ -163,6 +163,8 @@ If the answer is in English, evaluate based on:
 - Naturalness.
 - Relevance to agriculture if applicable.
 
+Then apply the score between 0-100.
+
 Return ONLY valid JSON.
 
 Feedback, strengths, and improvements must be in Bahasa Indonesia.
