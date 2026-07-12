@@ -35,7 +35,17 @@
                 <a href="#about" class="text-zinc-400 hover:text-white transition-colors">Tentang</a>
                 <a href="#modules" class="text-zinc-400 hover:text-white transition-colors">Modul</a>
                 <a href="#benefit" class="text-zinc-400 hover:text-white transition-colors">Manfaat</a>
-                <a href="<?= base_url('login') ?>" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">Login</a>
+                <?php if (session('logged_in')): ?>
+                    <a href="<?= site_url(session('role') === 'admin' ? 'admin/dashboard' : 'dashboard') ?>"
+                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
+                        Dashboard
+                    </a>
+                <?php else: ?>
+                    <a href="<?= site_url('login') ?>"
+                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
+                        Login
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

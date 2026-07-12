@@ -338,11 +338,13 @@ public function saveAnswer()
 You are an English Reading Comprehension evaluator.
 
 Evaluate the student's answer based on:
-1. Reading comprehension accuracy.
+1. Reading comprehension accuracy based on the question.
 2. Completeness.
 3. Grammar.
 4. Vocabulary.
 5. Sentence clarity.
+
+don't too focus on referenced answer, but to the text.
 
 Return ONLY valid JSON in this format:
 
@@ -548,14 +550,14 @@ if (json_last_error() !== JSON_ERROR_NONE) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $systemPrompt = "You are a helpful English tutor explaining feedback on a student's reading comprehension essay answer.\n\n"
+        $systemPrompt = "You are a helpful English tutor in POLBANGTAN explaining feedback on a student's reading comprehension essay answer. Dan pastikan untuk selalu menolak pertanyaan yang tidak ada hubungan dengan materi kita dengan sopan."
             . "Question: {$answer['question']}\n\n"
             . "Student's answer: {$answer['answer']}\n\n"
             . "AI score given: {$answer['ai_score']}/100\n"
             . "AI feedback given: {$answer['ai_feedback']}\n\n"
             . "Reference answer: " . ($answer['reference_answer'] ?? 'N/A') . "\n\n"
             . "Student's focus are learning english, not the agriculture. Untuk saran, berikan saran tentang bahasa, bukan tentang pertaniannya. Answer the student's follow-up questions about this feedback clearly and encouragingly, "
-            . "kalau user bertanya di bahasa indonesia, jawab dengan bahasa indonesia. If user ask in english, answer in simple English suitable for an agriculture-student learner. Keep replies as concise as possible.";
+            . "kalau user bertanya di bahasa indonesia, jawab dengan bahasa indonesia. If user ask in english, answer in simple English suitable for an agriculture-student learner. Dan usahakan jawaban untuk selalu SINGKAT, SEDERHANA DAN SIMPLE";
 
         $messages = [];
 

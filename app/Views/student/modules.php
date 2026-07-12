@@ -63,72 +63,75 @@
         </a>
 
         <!-- Vocabulary (disabled / under construction) -->
-        <div class="relative bg-white rounded-2xl border border-zinc-200 p-7 opacity-60 cursor-not-allowed select-none">
+      <!-- Vocabulary (active) -->
+<a href="<?= base_url('student/vocabulary') ?>"
+   class="group bg-white rounded-2xl border border-zinc-200 p-7 hover:border-zinc-900 hover:shadow-lg transition">
 
-            <span class="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
-                Coming Soon
-            </span>
+    <div class="flex justify-between items-start">
 
-            <div class="flex justify-between items-start">
+        <div class="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center">
 
-                <div class="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center">
-
-                    <svg class="w-7 h-7 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
-                    </svg>
-
-                </div>
-
-            </div>
-
-            <h2 class="text-xl font-bold mt-6 text-zinc-500">
-                Vocabulary in Context
-            </h2>
-
-            <p class="text-sm text-zinc-400 mt-3 leading-relaxed">
-                Learn agricultural vocabulary, meanings, examples, pronunciation, and AI-assisted exercises.
-            </p>
-
-            <div class="mt-6 text-sm font-semibold text-zinc-400">
-                Under Construction
-            </div>
+            <svg class="w-7 h-7 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+            </svg>
 
         </div>
 
+        <span class="text-xs uppercase tracking-widest text-zinc-400">
+            Module 2
+        </span>
+
+    </div>
+
+    <h2 class="text-xl font-bold mt-6">
+        Vocabulary in Context
+    </h2>
+
+    <p class="text-sm text-zinc-500 mt-3 leading-relaxed">
+        Learn agricultural vocabulary, meanings, examples, pronunciation, and complete AI-assisted vocabulary exercises.
+    </p>
+
+    <div class="mt-6 text-sm font-semibold text-zinc-900">
+        Start →
+    </div>
+
+</a>
         <!-- Pronunciation (disabled / under construction) -->
-        <div class="relative bg-white rounded-2xl border border-zinc-200 p-7 opacity-60 cursor-not-allowed select-none">
+       <!-- Pronunciation (active) -->
+<a href="<?= base_url('student/pronunciation') ?>"
+   class="group bg-white rounded-2xl border border-zinc-200 p-7 hover:border-zinc-900 hover:shadow-lg transition">
 
-            <span class="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
-                Coming Soon
-            </span>
+    <div class="flex justify-between items-start">
 
-            <div class="flex justify-between items-start">
+        <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center">
 
-                <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center">
-
-                    <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 1v22m5-18a5 5 0 01-10 0m10 8a5 5 0 01-10 0"/>
-                    </svg>
-
-                </div>
-
-            </div>
-
-            <h2 class="text-xl font-bold mt-6 text-zinc-500">
-                Pronunciation
-            </h2>
-
-            <p class="text-sm text-zinc-400 mt-3 leading-relaxed">
-                Practice speaking agricultural vocabulary and receive AI pronunciation feedback.
-            </p>
-
-            <div class="mt-6 text-sm font-semibold text-zinc-400">
-                Under Construction
-            </div>
+            <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 1v22m5-18a5 5 0 01-10 0m10 8a5 5 0 01-10 0"/>
+            </svg>
 
         </div>
+
+        <span class="text-xs uppercase tracking-widest text-zinc-400">
+            Module 3
+        </span>
+
+    </div>
+
+    <h2 class="text-xl font-bold mt-6">
+        Pronunciation
+    </h2>
+
+    <p class="text-sm text-zinc-500 mt-3 leading-relaxed">
+        Practice speaking agricultural vocabulary and sentences. Receive AI feedback on pronunciation, fluency, and accuracy.
+    </p>
+
+    <div class="mt-6 text-sm font-semibold text-zinc-900">
+        Start →
+    </div>
+
+</a>
 
     </div>
 

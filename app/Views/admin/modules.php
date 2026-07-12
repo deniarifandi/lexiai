@@ -60,7 +60,7 @@
 
         <!-- Vocabulary -->
 
-        <a href="<?= base_url('vocabulary') ?>"
+        <a href="<?= base_url('admin/vocabularies') ?>"
            class="group bg-white border border-zinc-200 rounded-2xl p-6 hover:border-zinc-900 hover:shadow-lg transition">
 
             <div class="flex items-center justify-between">

@@ -12,7 +12,7 @@
             </p>
         </div>
 
-        <a href="<?= base_url('reading-materials') ?>"
+        <a href="<?= base_url('admin/reading-materials') ?>"
            class="text-sm text-zinc-600 hover:text-zinc-900">
             ← Kembali
         </a>
