@@ -49,7 +49,7 @@
             </div>
 
             <h2 class="text-lg font-bold mt-6">
-                Reading
+                Reading List
             </h2>
 
             <p class="text-sm text-zinc-500 mt-2">
@@ -88,18 +88,18 @@
             </div>
 
             <h2 class="text-lg font-bold mt-6">
-                Vocabulary in Context
+                Vocabulary List
             </h2>
 
             <p class="text-sm text-zinc-500 mt-2">
-                Kelola vocabulary, contoh kalimat, audio, dan latihan.
+                Kelola vocabulary untuk Context dan Pronounciation
             </p>
 
         </a>
 
         <!-- Pronunciation -->
 
-        <a href="<?= base_url('pronunciation') ?>"
+       <!--  <a href="<?= base_url('pronunciation') ?>"
            class="group bg-white border border-zinc-200 rounded-2xl p-6 hover:border-zinc-900 hover:shadow-lg transition">
 
             <div class="flex items-center justify-between">
@@ -135,7 +135,7 @@
             </p>
 
         </a>
-
+ -->
     </div>
 
 </div>

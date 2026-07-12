@@ -12,12 +12,20 @@ $routes->get('/', 'Home::index');
 
 $routes->get('login', 'Auth::index');
 $routes->post('login', 'Auth::login');
-$routes->get('logout', 'Auth::logout');
 
 $routes->get('register', 'Auth::register');
 $routes->post('register', 'Auth::store');
 
-$routes->get('dashboard', 'Home::dashboard');
+$routes->get('logout', 'Auth::logout');
+
+
+// =====================================================
+// AUTHENTICATED USERS
+// =====================================================
+
+$routes->group('', ['filter' => 'auth'], function ($routes) {
+    $routes->get('dashboard', 'Home::dashboard');
+});
 
 
 // =====================================================
@@ -26,7 +34,6 @@ $routes->get('dashboard', 'Home::dashboard');
 
 $routes->group('admin', ['filter' => 'admin'], function ($routes) {
 
-    // Dashboard
     $routes->get('/', 'AdminController::index');
     $routes->get('dashboard', 'AdminController::index');
 
@@ -133,11 +140,6 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
 
     $routes->get('vocabulary-exercises/delete/(:num)', 'VocabularyExercises::delete/$1');
 
-
-    // =====================================================
-    // PRONUNCIATION
-    // =====================================================
-    // Tambahkan route Pronunciation di sini nanti.
 });
 
 
@@ -145,103 +147,38 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
 // STUDENT
 // =====================================================
 
-$routes->group('student', function ($routes) {
+$routes->group('student', ['filter' => 'auth'], function ($routes) {
 
-    // =====================================================
-    // READING
-    // =====================================================
-
+    // -----------------------------
+    // Reading
+    // -----------------------------
     $routes->get('reading', 'Student\Reading::index');
-
     $routes->get('reading/start/(:num)', 'Student\Reading::start/$1');
-
     $routes->get('reading/(:num)', 'Student\Reading::show/$1');
-
     $routes->get('reading/test/(:num)', 'Student\Reading::test/$1');
-
     $routes->post('reading/submit/(:num)', 'Student\Reading::submit/$1');
-
     $routes->post('reading/save-answer', 'Student\Reading::saveAnswer');
-
     $routes->get('reading/result/(:num)', 'Student\Reading::result/$1');
-
     $routes->get('reading/feedback/(:num)', 'Student\Reading::feedback/$1');
-
     $routes->post('reading/chat', 'Student\Reading::chat');
 
-
-    // =====================================================
-    // VOCABULARY
-    // =====================================================
-
+    // -----------------------------
+    // Vocabulary
+    // -----------------------------
     $routes->get('vocabulary', 'Student\Vocabulary::index');
-
-    $routes->get('vocabulary/(:num)', 'Student\Vocabulary::show/$1');
-
-    $routes->get('vocabulary/exercise/(:num)', 'Student\Vocabulary::exercise/$1');
-
-    $routes->post('vocabulary/submit/(:num)', 'Student\Vocabulary::submit/$1');
-
-    $routes->get('vocabulary/result/(:num)', 'Student\Vocabulary::result/$1');
-
+    $routes->get('vocabulary/start/(:num)', 'Student\Vocabulary::start/$1');
+    $routes->get('vocabulary/test/(:num)', 'Student\Vocabulary::test/$1');
+    $routes->post('vocabulary/save-answer', 'Student\Vocabulary::saveAnswer');
     $routes->get('vocabulary/feedback/(:num)', 'Student\Vocabulary::feedback/$1');
-
     $routes->post('vocabulary/chat', 'Student\Vocabulary::chat');
 
-
-    // =====================================================
-    // PRONUNCIATION
-    // =====================================================
-
+    // -----------------------------
+    // Pronunciation
+    // -----------------------------
     $routes->get('pronunciation', 'Student\Pronunciation::index');
-
-    $routes->get('pronunciation/(:num)', 'Student\Pronunciation::show/$1');
-
-    $routes->post('pronunciation/submit/(:num)', 'Student\Pronunciation::submit/$1');
-
-    $routes->get('pronunciation/result/(:num)', 'Student\Pronunciation::result/$1');
-
-    $routes->post('pronunciation/chat', 'Student\Pronunciation::chat');
-});
-
-$routes->group('student', function ($routes) {
-
-    $routes->get('vocabulary', 'Student\Vocabulary::index');
-
-    $routes->get('vocabulary/start/(:num)', 'Student\Vocabulary::start/$1');
-
-    $routes->get('vocabulary/test/(:num)', 'Student\Vocabulary::test/$1');
-
-    $routes->post('vocabulary/save-answer', 'Student\Vocabulary::saveAnswer');
-
-    $routes->get(
-    'vocabulary/feedback/(:num)',
-    'Student\Vocabulary::feedback/$1'
-);
-
-    $routes->post(
-        'student/vocabulary/chat',
-        'Student\Vocabulary::chat'
-    );
-});
-
-
-// ------------------------------------------------
-// Student - Pronunciation
-// ------------------------------------------------
-
-$routes->group('student', function ($routes) {
-
-    $routes->get('pronunciation', 'Student\Pronunciation::index');
-
     $routes->get('pronunciation/start/(:num)', 'Student\Pronunciation::start/$1');
-
     $routes->get('pronunciation/test/(:num)', 'Student\Pronunciation::test/$1');
-
     $routes->post('pronunciation/save-answer', 'Student\Pronunciation::saveAnswer');
-
     $routes->get('pronunciation/feedback/(:num)', 'Student\Pronunciation::feedback/$1');
-
     $routes->post('pronunciation/chat', 'Student\Pronunciation::chat');
-
 });
