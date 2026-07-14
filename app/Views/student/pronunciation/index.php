@@ -86,7 +86,7 @@
                                                 onclick="toggleRecord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>')"
                                                 class="record-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-50 hover:bg-red-100 text-red-500 transition shrink-0"
                                                 title="Record your voice"
-                                                id="btn-record-<?= $i ?>">
+                                                id="btn-record-<?= $i ?>" style="display: none;">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
                                                 <circle cx="12" cy="12" r="8"/>
                                             </svg>
