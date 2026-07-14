@@ -351,7 +351,7 @@ const RECORD_ERROR_MESSAGES = {
 document.addEventListener('DOMContentLoaded', () => {
     if (SpeechRecognitionAPI) {
         document.querySelectorAll('.record-btn').forEach(btn => {
-            btn.style.display = '';
+            //btn.style.display = '';
         });
     }
 });
