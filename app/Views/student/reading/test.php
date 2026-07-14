@@ -2,6 +2,15 @@
 
 <?= $this->section('content') ?>
 
+<style>
+    #reading-passage {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+</style>
+
 <div class="space-y-6">
 
     <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -78,7 +87,7 @@
                     Reading Passage
                 </h2>
 
-                <div class="text-zinc-700 leading-8 whitespace-pre-line">
+                <div class="text-zinc-700 leading-8 whitespace-pre-line"  id="reading-passage"  draggable="false">
 
                     <?= esc($material['content']) ?>
 
@@ -236,6 +245,23 @@
         }
     });
 })();
+
+document.getElementById('reading-passage')
+    .addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    const passage = document.getElementById('reading-passage');
+
+passage.addEventListener('copy', e => e.preventDefault());
+passage.addEventListener('cut', e => e.preventDefault());
+
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) &&
+        ['c','x','a'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+    }
+});
 </script>
 
         </div>
