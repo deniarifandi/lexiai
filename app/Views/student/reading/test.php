@@ -132,11 +132,15 @@
                             </label>
 
                             <textarea
-                                name="answer"
-                                rows="9"
-                                required
-                                class="w-full rounded-xl border border-zinc-200 p-4 focus:ring-1 focus:ring-zinc-900 focus:outline-none"
-                                placeholder="Write your answer in English..."></textarea>
+    name="answer"
+    rows="9"
+    required
+    spellcheck="false"
+    autocomplete="off"
+    autocorrect="off"
+    autocapitalize="off"
+    class="w-full rounded-xl border border-zinc-200 p-4 focus:ring-1 focus:ring-zinc-900 focus:outline-none"
+    placeholder="Write your answer in English..."></textarea>
 
                         </div>
 
