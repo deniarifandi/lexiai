@@ -21,7 +21,26 @@
         </span>
     </div>
 
-    <?php if (!empty($vocabularies)): ?>
+    <?php if (!empty($vocabularies)):
+
+        // Re-index sequentially (0..n-1) in original order first, so JS index
+        // references stay stable no matter how we group/display them.
+        $indexed = [];
+        foreach ($vocabularies as $row) {
+            $indexed[] = $row;
+        }
+
+        // Group by first letter of the word, keeping the global $i per row.
+        $groupedVocab = [];
+        foreach ($indexed as $i => $row) {
+            $letter = strtoupper(substr(trim($row['word']), 0, 1));
+            if (!ctype_alpha($letter)) $letter = '#';
+            $groupedVocab[$letter][] = ['i' => $i, 'row' => $row];
+        }
+        ksort($groupedVocab);
+
+        $alphabet = range('A', 'Z');
+    ?>
 
         <!-- Toolbar: accent + practice mode + progress -->
         <div class="flex flex-wrap items-center justify-between gap-3 bg-white border border-zinc-200 rounded-xl px-4 py-3 shadow-sm">
@@ -44,76 +63,129 @@
             </div>
 
             <div class="text-[11px] text-zinc-500 font-medium">
-                <span id="progressLabel">0</span> / <?= count($vocabularies) ?> words listened
+                <span id="progressLabel">0</span> / <?= count($indexed) ?> words listened
             </div>
         </div>
 
-        <div class="overflow-hidden border border-zinc-200 rounded-xl bg-white shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
-                            <th class="py-2.5 px-4 w-1/2">Word</th>
-                            <th class="py-2.5 px-4 w-1/2">Meaning</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-zinc-100 text-xs">
-                        <?php foreach ($vocabularies as $i => $row): ?>
-                            <tr class="hover:bg-zinc-50/60 transition-colors" id="row-<?= $i ?>" data-word="<?= esc($row['word'], 'js') ?>">
-                                <!-- Word & Phonetic -->
-                                <td class="py-3 px-4 font-semibold text-zinc-900 whitespace-nowrap">
-                                    <div class="flex items-center gap-2">
-                                        <button type="button"
-                                                onclick="speakWord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>', 0.85)"
-                                                class="speak-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition shrink-0"
-                                                title="Listen (normal speed)"
-                                                id="btn-normal-<?= $i ?>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
-                                                <path d="M11 5 6 9H2v6h4l5 4V5z"/>
-                                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07M18.36 5.64a9 9 0 0 1 0 12.72" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                                            </svg>
-                                        </button>
-
-                                        <button type="button"
-                                                onclick="speakWord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>', 0.5)"
-                                                class="speak-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition shrink-0"
-                                                title="Listen (slow)"
-                                                id="btn-slow-<?= $i ?>">
-                                            <span class="text-[10px] font-bold">0.5x</span>
-                                        </button>
-
-                                        <button type="button"
-                                                onclick="toggleRecord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>')"
-                                                class="record-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-50 hover:bg-red-100 text-red-500 transition shrink-0"
-                                                title="Record your voice"
-                                                id="btn-record-<?= $i ?>" style="display: none;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
-                                                <circle cx="12" cy="12" r="8"/>
-                                            </svg>
-                                        </button>
-
-                                        <span><?= esc($row['word']) ?></span>
-                                        <?php if (!empty($row['pronunciation'])): ?>
-                                            <span class="text-[11px] text-zinc-400 font-mono font-normal">[<?= esc($row['pronunciation']) ?>]</span>
-                                        <?php endif; ?>
-
-                                        <span class="play-count text-[10px] text-zinc-300 font-normal" id="count-<?= $i ?>"></span>
-                                    </div>
-
-                                    <!-- AI Feedback Panel (hidden by default) -->
-                                    <div id="feedback-<?= $i ?>" class="hidden mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border"></div>
-                                </td>
-
-                                <!-- Meaning -->
-                                <td class="py-3 px-4 text-zinc-600 max-w-xs truncate">
-                                    <?= esc($row['meaning']) ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+        <!-- Search -->
+        <div class="relative">
+            <input type="text" id="vocabSearch" placeholder="Search word or meaning..."
+                   class="w-full text-xs border border-zinc-200 rounded-lg py-2 pl-8 pr-3 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-400 placeholder:text-zinc-400">
+            <svg class="w-4 h-4 text-zinc-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+            </svg>
         </div>
+
+        <!-- Alphabet Filter Nav -->
+        <div class="sticky top-0 z-10 bg-white/90 backdrop-blur border border-zinc-200 rounded-xl px-2 py-1.5 flex flex-wrap gap-1 shadow-sm">
+            <button type="button" onclick="filterByLetter('all', this)"
+                    data-letter-btn="all"
+                    class="letter-filter-btn active px-2 h-6 flex items-center justify-center text-[11px] font-bold rounded-md bg-zinc-900 text-white transition">
+                All
+            </button>
+            <?php foreach ($alphabet as $letter): ?>
+                <?php $hasWords = !empty($groupedVocab[$letter]); ?>
+                <?php if ($hasWords): ?>
+                    <button type="button" onclick="filterByLetter('<?= $letter ?>', this)"
+                            data-letter-btn="<?= $letter ?>"
+                            class="letter-filter-btn w-6 h-6 flex items-center justify-center text-[11px] font-bold rounded-md bg-zinc-100 text-zinc-700 hover:bg-zinc-900 hover:text-white transition">
+                        <?= $letter ?>
+                    </button>
+                <?php else: ?>
+                    <span class="w-6 h-6 flex items-center justify-center text-[11px] font-medium rounded-md text-zinc-300 cursor-default">
+                        <?= $letter ?>
+                    </span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="space-y-4">
+            <?php foreach ($groupedVocab as $letter => $entries): ?>
+                <div id="letter-<?= $letter ?>" class="scroll-mt-16 overflow-hidden border border-zinc-200 rounded-xl bg-white shadow-sm vocab-section">
+
+                    <!-- Header Huruf -->
+                    <div class="px-4 py-2 bg-zinc-50 border-b border-zinc-200 flex items-center gap-2">
+                        <span class="text-xs font-bold text-zinc-800 tracking-wide"><?= $letter ?></span>
+                        <span class="text-[10px] px-1.5 py-0.1 bg-zinc-200/60 text-zinc-600 rounded-full font-medium font-mono">
+                            <?= count($entries) ?>
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+                                    <th class="py-2.5 px-4 w-1/2">Word</th>
+                                    <th class="py-2.5 px-4 w-1/2">Meaning</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-zinc-100 text-xs">
+                                <?php foreach ($entries as $entry):
+                                    $i = $entry['i'];
+                                    $row = $entry['row'];
+                                ?>
+                                    <tr class="hover:bg-zinc-50/60 transition-colors vocab-row"
+                                        id="row-<?= $i ?>"
+                                        data-word="<?= esc($row['word'], 'js') ?>"
+                                        data-search-word="<?= esc(strtolower($row['word'])) ?>"
+                                        data-search-meaning="<?= esc(strtolower($row['meaning'])) ?>">
+                                        <!-- Word & Phonetic -->
+                                        <td class="py-3 px-4 font-semibold text-zinc-900 whitespace-nowrap">
+                                            <div class="flex items-center gap-2">
+                                                <button type="button"
+                                                        onclick="speakWord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>', 0.85)"
+                                                        class="speak-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition shrink-0"
+                                                        title="Listen (normal speed)"
+                                                        id="btn-normal-<?= $i ?>">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
+                                                        <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+                                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07M18.36 5.64a9 9 0 0 1 0 12.72" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                                    </svg>
+                                                </button>
+
+                                                <button type="button"
+                                                        onclick="speakWord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>', 0.5)"
+                                                        class="speak-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition shrink-0"
+                                                        title="Listen (slow)"
+                                                        id="btn-slow-<?= $i ?>">
+                                                    <span class="text-[10px] font-bold">0.5x</span>
+                                                </button>
+
+                                                <button type="button"
+                                                        onclick="toggleRecord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>')"
+                                                        class="record-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-50 hover:bg-red-100 text-red-500 transition shrink-0"
+                                                        title="Record your voice"
+                                                        id="btn-record-<?= $i ?>" style="display: none;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
+                                                        <circle cx="12" cy="12" r="8"/>
+                                                    </svg>
+                                                </button>
+
+                                                <span><?= esc($row['word']) ?></span>
+                                                <?php if (!empty($row['pronunciation'])): ?>
+                                                    <span class="text-[11px] text-zinc-400 font-mono font-normal">[<?= esc($row['pronunciation']) ?>]</span>
+                                                <?php endif; ?>
+
+                                                <span class="play-count text-[10px] text-zinc-300 font-normal" id="count-<?= $i ?>"></span>
+                                            </div>
+
+                                            <!-- AI Feedback Panel (hidden by default) -->
+                                            <div id="feedback-<?= $i ?>" class="hidden mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border"></div>
+                                        </td>
+
+                                        <!-- Meaning -->
+                                        <td class="py-3 px-4 text-zinc-600 max-w-xs truncate">
+                                            <?= esc($row['meaning']) ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
     <?php else: ?>
         <!-- Empty State Container -->
         <div class="bg-white border border-zinc-200 rounded-xl p-8 text-center text-zinc-500 text-xs">
@@ -126,7 +198,10 @@
     const playCounts = {};
     let isPlayingAll = false;
     let playAllIndex = 0;
-    const totalWords = <?= isset($vocabularies) ? count($vocabularies) : 0 ?>;
+    const totalWords = <?= isset($indexed) ? count($indexed) : 0 ?>;
+    // Sequence of row indices in the order they appear on the page (alphabetical),
+    // so "Practice All" walks through them in the same order the student sees.
+    const playOrder = <?= isset($groupedVocab) ? json_encode(array_merge(...array_map(fn($entries) => array_map(fn($e) => $e['i'], $entries), array_values($groupedVocab)))) : '[]' ?>;
 
     function getAccent() {
         return document.getElementById('accentSelect').value;
@@ -228,15 +303,16 @@
     }
 
     function playNextInSequence() {
-        if (!isPlayingAll || playAllIndex >= totalWords) {
+        if (!isPlayingAll || playAllIndex >= playOrder.length) {
             stopPlayAll();
             return;
         }
 
-        const row = document.getElementById('row-' + playAllIndex);
+        const realIndex = playOrder[playAllIndex];
+        const row = document.getElementById('row-' + realIndex);
         const word = row.dataset.word;
 
-        speakWord(playAllIndex, word, 0.85, () => {
+        speakWord(realIndex, word, 0.85, () => {
             playAllIndex++;
             setTimeout(playNextInSequence, 500);
         });
@@ -268,6 +344,17 @@ const RECORD_ERROR_MESSAGES = {
     'no-speech': 'Tidak ada suara terdeteksi. Coba lagi dan ucapkan lebih jelas.',
     'language-not-supported': 'Bahasa/aksen ini tidak didukung untuk speech recognition di device kamu.',
 };
+
+// Feature-detect: only show the mic button in browsers that actually
+// support SpeechRecognition. Fixes the bug where the button was
+// hard-coded to display:none and nothing ever revealed it.
+document.addEventListener('DOMContentLoaded', () => {
+    if (SpeechRecognitionAPI) {
+        document.querySelectorAll('.record-btn').forEach(btn => {
+            btn.style.display = '';
+        });
+    }
+});
 
 function toggleRecord(index, word) {
     if (!SpeechRecognitionAPI) {
@@ -425,5 +512,48 @@ function resetRecordButton(index) {
             ${data.tip ? '<div class="mt-1 italic">Tip: ' + data.tip + '</div>' : ''}
         `;
     }
+
+    // Combined letter filter + search filter
+    let activeLetter = 'all';
+
+    function filterByLetter(letter, btnEl) {
+        activeLetter = letter;
+
+        document.querySelectorAll('.letter-filter-btn').forEach(btn => {
+            const isActive = btn.dataset.letterBtn === letter;
+            btn.classList.toggle('active', isActive);
+            btn.classList.toggle('bg-zinc-900', isActive);
+            btn.classList.toggle('text-white', isActive);
+            btn.classList.toggle('bg-zinc-100', !isActive);
+            btn.classList.toggle('text-zinc-700', !isActive);
+        });
+
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const q = (document.getElementById('vocabSearch')?.value || '').trim().toLowerCase();
+        const sections = document.querySelectorAll('.vocab-section');
+
+        sections.forEach(section => {
+            const sectionLetter = section.id.replace('letter-', '');
+            const letterMatches = activeLetter === 'all' || sectionLetter === activeLetter;
+
+            if (!letterMatches) {
+                section.style.display = 'none';
+                return;
+            }
+
+            let visibleCount = 0;
+            section.querySelectorAll('.vocab-row').forEach(row => {
+                const searchMatches = !q || row.dataset.searchWord.includes(q) || row.dataset.searchMeaning.includes(q);
+                row.style.display = searchMatches ? '' : 'none';
+                if (searchMatches) visibleCount++;
+            });
+            section.style.display = visibleCount > 0 ? '' : 'none';
+        });
+    }
+
+    document.getElementById('vocabSearch')?.addEventListener('input', applyFilters);
 </script>
 <?= $this->endSection() ?>
