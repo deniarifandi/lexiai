@@ -29,8 +29,8 @@
                 <div class="flex items-center gap-2">
                     <label class="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Accent</label>
                     <select id="accentSelect" class="text-xs border border-zinc-200 rounded-lg px-2 py-1.5 bg-zinc-50 text-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-400">
-                        <option value="en-US">US English</option>
-                        <option value="en-GB">UK English</option>
+                        <option value="en-US">American English</option>
+                        <option value="en-GB">British English</option>
                     </select>
                 </div>
 
@@ -275,20 +275,17 @@ function toggleRecord(index, word) {
         return;
     }
 
-    if (recordingIndex === index && recognizer) {
-        recognizer.stop();
+    // Kalau sedang record (baris manapun), abaikan klik — biarkan auto-stop
+    if (recordingIndex !== null) {
+        console.log('[speech] ignoring click, recording still in progress');
         return;
-    }
-
-    if (recognizer) {
-        recognizer.stop();
     }
 
     recordingIndex = index;
     const btn = document.getElementById('btn-record-' + index);
     btn.classList.add('bg-red-500', 'text-white', 'animate-pulse');
+    btn.disabled = true; // cegah double-tap di baris yang sama
 
-    // Bersihkan feedback lama & kasih indikasi "sedang mendengarkan"
     const panel = document.getElementById('feedback-' + index);
     panel.className = 'mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border bg-zinc-50 border-zinc-200 text-zinc-500';
     panel.textContent = 'Mendengarkan... ucapkan kata "' + word + '"';
@@ -303,8 +300,6 @@ function toggleRecord(index, word) {
 
     recognizer.onstart = () => {
         console.log('[speech] started listening for word:', word);
-        // Guard: kalau dalam 8 detik tidak ada onresult/onerror/onend sama sekali
-        // (recognizer "hang"), paksa stop dan kasih tahu user.
         recordTimeoutId = setTimeout(() => {
             if (recordingIndex === index) {
                 console.log('[speech] timeout guard triggered, forcing stop');
@@ -317,7 +312,7 @@ function toggleRecord(index, word) {
                 });
                 resetRecordButton(index);
             }
-        }, 8000);
+        }, 3000);
     };
 
     recognizer.onresult = (event) => {
@@ -329,7 +324,7 @@ function toggleRecord(index, word) {
 
     recognizer.onerror = (event) => {
         console.log('[speech] onerror:', event.error);
-        resultReceived = true; // supaya onend tidak dobel nampilin pesan
+        resultReceived = true;
         resetRecordButton(index);
 
         const message = RECORD_ERROR_MESSAGES[event.error]
@@ -346,7 +341,6 @@ function toggleRecord(index, word) {
     recognizer.onend = () => {
         console.log('[speech] onend fired');
         clearTimeout(recordTimeoutId);
-        // Kalau onend fire tanpa onresult/onerror sebelumnya -> kasus "hang" senyap
         if (!resultReceived) {
             showFeedback(index, {
                 ok: true,
@@ -374,7 +368,10 @@ function toggleRecord(index, word) {
 
 function resetRecordButton(index) {
     const btn = document.getElementById('btn-record-' + index);
-    if (btn) btn.classList.remove('bg-red-500', 'text-white', 'animate-pulse');
+    if (btn) {
+        btn.classList.remove('bg-red-500', 'text-white', 'animate-pulse');
+        btn.disabled = false;
+    }
     clearTimeout(recordTimeoutId);
     recordingIndex = null;
     recognizer = null;
