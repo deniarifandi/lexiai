@@ -312,7 +312,7 @@ function toggleRecord(index, word) {
                 });
                 resetRecordButton(index);
             }
-        }, 3000);
+        }, 5000);
     };
 
     recognizer.onresult = (event) => {
