@@ -181,4 +181,8 @@ $routes->group('student', ['filter' => 'auth'], function ($routes) {
     $routes->post('pronunciation/save-answer', 'Student\Pronunciation::saveAnswer');
     $routes->get('pronunciation/feedback/(:num)', 'Student\Pronunciation::feedback/$1');
     $routes->post('pronunciation/chat', 'Student\Pronunciation::chat');
+
+
 });
+
+$routes->post('student/pronunciation/review', 'Student\Pronunciation::reviewPronunciation');

@@ -29,8 +29,8 @@
                 <div class="flex items-center gap-2">
                     <label class="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Accent</label>
                     <select id="accentSelect" class="text-xs border border-zinc-200 rounded-lg px-2 py-1.5 bg-zinc-50 text-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-400">
-                        <option value="en-US">American English</option>
-                        <option value="en-GB">British English</option>
+                        <option value="en-US">US English</option>
+                        <option value="en-GB">UK English</option>
                     </select>
                 </div>
 
@@ -82,6 +82,16 @@
                                             <span class="text-[10px] font-bold">0.5x</span>
                                         </button>
 
+                                        <button type="button"
+                                                onclick="toggleRecord(<?= $i ?>, '<?= esc($row['word'], 'js') ?>')"
+                                                class="record-btn inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-50 hover:bg-red-100 text-red-500 transition shrink-0"
+                                                title="Record your voice"
+                                                id="btn-record-<?= $i ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
+                                                <circle cx="12" cy="12" r="8"/>
+                                            </svg>
+                                        </button>
+
                                         <span><?= esc($row['word']) ?></span>
                                         <?php if (!empty($row['pronunciation'])): ?>
                                             <span class="text-[11px] text-zinc-400 font-mono font-normal">[<?= esc($row['pronunciation']) ?>]</span>
@@ -89,6 +99,9 @@
 
                                         <span class="play-count text-[10px] text-zinc-300 font-normal" id="count-<?= $i ?>"></span>
                                     </div>
+
+                                    <!-- AI Feedback Panel (hidden by default) -->
+                                    <div id="feedback-<?= $i ?>" class="hidden mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border"></div>
                                 </td>
 
                                 <!-- Meaning -->
@@ -119,6 +132,37 @@
         return document.getElementById('accentSelect').value;
     }
 
+    // --- Voice loading ---
+    // Fix: di Android/Chrome, kalau bahasa sistem HP = Indonesia, engine TTS
+    // kadang mengabaikan utterance.lang dan tetap pakai voice Indonesia default.
+    // Solusinya: assign objek voice secara eksplisit, jangan cuma andalkan .lang
+    let availableVoices = [];
+
+    function loadVoices() {
+        availableVoices = window.speechSynthesis.getVoices();
+    }
+
+    loadVoices();
+    if ('onvoiceschanged' in window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function pickVoiceForLang(langCode) {
+        if (!availableVoices.length) loadVoices();
+
+        // 1. Exact match, misal "en-US"
+        let voice = availableVoices.find(v => v.lang === langCode);
+        if (voice) return voice;
+
+        // 2. Prefix match, "en-US" -> voice apapun yang berawalan "en-"
+        const prefix = langCode.split('-')[0];
+        voice = availableVoices.find(v => v.lang.toLowerCase().startsWith(prefix));
+        if (voice) return voice;
+
+        // 3. Tidak ada voice bahasa Inggris terpasang di device
+        return null;
+    }
+
     function highlightRow(index, active) {
         const row = document.getElementById('row-' + index);
         if (!row) return;
@@ -137,30 +181,38 @@
     }
 
     function speakWord(index, word, rate, onEndCallback) {
-        if (!('speechSynthesis' in window)) {
-            alert('Sorry, your browser does not support text-to-speech.');
-            return;
-        }
+    if (!('speechSynthesis' in window)) {
+        alert('Sorry, your browser does not support text-to-speech.');
+        return;
+    }
 
-        window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
 
-        const utterance = new SpeechSynthesisUtterance(word);
-        utterance.lang = getAccent();
-        utterance.rate = rate;
+    const langCode = getAccent();
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = langCode;
 
-        highlightRow(index, true);
-        bumpCount(index);
+    const voice = pickVoiceForLang(langCode);
+    if (voice) {
+        utterance.voice = voice;
+    } else {
+        // Device tidak punya voice bahasa Inggris — beri tahu user sekali saja
+        console.warn('No English voice found on this device for', langCode);
+    }
 
-        utterance.onend = () => {
-            highlightRow(index, false);
-            if (onEndCallback) onEndCallback();
-        };
-        utterance.onerror = () => {
-            highlightRow(index, false);
-            if (onEndCallback) onEndCallback();
-        };
+    highlightRow(index, true);
+    bumpCount(index);
 
-        window.speechSynthesis.speak(utterance);
+    utterance.onend = () => {
+        highlightRow(index, false);
+        if (onEndCallback) onEndCallback();
+    };
+    utterance.onerror = () => {
+        highlightRow(index, false);
+        if (onEndCallback) onEndCallback();
+    };
+
+    window.speechSynthesis.speak(utterance);
     }
 
     function togglePlayAll() {
@@ -194,6 +246,146 @@
         isPlayingAll = false;
         window.speechSynthesis.cancel();
         document.getElementById('playAllLabel').textContent = 'Practice All';
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Recording + AI Review (no save, ephemeral)
+    |--------------------------------------------------------------------------
+    */
+
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognizer = null;
+    let recordingIndex = null;
+
+    function toggleRecord(index, word) {
+        if (!SpeechRecognitionAPI) {
+            alert('Browser kamu belum mendukung fitur record ini. Coba pakai Chrome atau Edge.');
+            return;
+        }
+
+        // Kalau sedang record baris ini, stop
+        if (recordingIndex === index && recognizer) {
+            recognizer.stop();
+            return;
+        }
+
+        // Kalau sedang record baris lain, stop dulu
+        if (recognizer) {
+            recognizer.stop();
+        }
+
+        recordingIndex = index;
+        const btn = document.getElementById('btn-record-' + index);
+        btn.classList.add('bg-red-500', 'text-white', 'animate-pulse');
+
+        recognizer = new SpeechRecognitionAPI();
+        recognizer.lang = getAccent();
+        recognizer.maxAlternatives = 1;
+        recognizer.interimResults = false;
+
+        recognizer.onstart = () => {
+            console.log('[speech] started listening for word:', word);
+        };
+
+        recognizer.onspeechstart = () => {
+            console.log('[speech] speech detected');
+        };
+
+        recognizer.onspeechend = () => {
+            console.log('[speech] speech ended');
+        };
+
+        recognizer.onnomatch = () => {
+            console.log('[speech] no match found');
+        };
+
+        recognizer.onresult = (event) => {
+            console.log('[speech] onresult fired', event);
+            const transcript = event.results[0][0].transcript;
+            console.log('[speech] transcript:', transcript);
+            sendForReview(index, word, transcript);
+        };
+
+        recognizer.onerror = (event) => {
+            console.log('[speech] onerror:', event.error);
+            resetRecordButton(index);
+            if (event.error === 'no-speech') {
+                showFeedback(index, {
+                    ok: true,
+                    score: 0,
+                    feedback: 'Tidak ada suara terdeteksi. Coba lagi dan ucapkan lebih jelas.',
+                    tip: '',
+                });
+            }
+        };
+
+        recognizer.onend = () => {
+            console.log('[speech] onend fired');
+            resetRecordButton(index);
+        };
+
+        try {
+            recognizer.start();
+        } catch (err) {
+            console.log('[speech] failed to start:', err);
+        }
+    }
+
+    function resetRecordButton(index) {
+        const btn = document.getElementById('btn-record-' + index);
+        btn.classList.remove('bg-red-500', 'text-white', 'animate-pulse');
+        recordingIndex = null;
+        recognizer = null;
+    }
+
+    async function sendForReview(index, word, transcript) {
+        const panel = document.getElementById('feedback-' + index);
+        panel.className = 'mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border bg-zinc-50 border-zinc-200 text-zinc-500';
+        panel.textContent = 'Menilai ucapanmu...';
+
+        try {
+            const response = await fetch('<?= site_url('student/pronunciation/review') ?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: new URLSearchParams({
+                    word: word,
+                    transcript: transcript,
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                }),
+            });
+
+            const data = await response.json();
+            showFeedback(index, data);
+        } catch (err) {
+            panel.className = 'mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border bg-red-50 border-red-200 text-red-600';
+            panel.textContent = 'Gagal menghubungi server. Coba lagi.';
+        }
+    }
+
+    function showFeedback(index, data) {
+        const panel = document.getElementById('feedback-' + index);
+
+        if (!data.ok) {
+            panel.className = 'mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border bg-red-50 border-red-200 text-red-600';
+            panel.textContent = data.message || 'Terjadi kesalahan.';
+            return;
+        }
+
+        const score = data.score;
+        let colorClass = 'bg-emerald-50 border-emerald-200 text-emerald-700';
+        if (score < 40) colorClass = 'bg-red-50 border-red-200 text-red-600';
+        else if (score < 75) colorClass = 'bg-amber-50 border-amber-200 text-amber-700';
+
+        panel.className = 'mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border ' + colorClass;
+        panel.innerHTML = `
+            <div class="font-semibold mb-0.5">Score: ${score}/100 ${data.heard_as ? '&middot; terdengar: "' + data.heard_as + '"' : ''}</div>
+            <div>${data.feedback}</div>
+            ${data.tip ? '<div class="mt-1 italic">Tip: ' + data.tip + '</div>' : ''}
+        `;
     }
 </script>
 <?= $this->endSection() ?>

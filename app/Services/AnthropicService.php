@@ -5,7 +5,8 @@ namespace App\Services;
 class AnthropicService
 {
     protected string $apiKey;
-    protected string $model = 'gemini-2.5-flash-lite';
+    // protected string $model = 'gemini-2.5-flash-lite';
+    protected string $model = 'gemini-3.1-flash-lite';
     // protected string $model = 'gemini-2.5-flash-lite-preview-09-2025';
 
     public function __construct()
