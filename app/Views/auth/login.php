@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="<?= base_url() ?>logolexiaismall.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
@@ -35,10 +36,11 @@
         <div class="absolute top-1/3 right-10 w-72 h-72 bg-emerald-500/5 rounded-full blur-[100px]"></div>
         
         <div class="max-w-md relative z-10 space-y-8">
-            <div class="inline-flex items-center gap-2">
-                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">Lexi</span>
-                <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">AI</span>
-            </div>
+            <img
+        src="<?= base_url() ?>logolexiai.png"
+        alt="Lexi AI"
+        class="h-10 w-auto"
+    >
 
             <div class="space-y-4">
                 <h1 class="text-4xl font-extrabold tracking-tight leading-tight">

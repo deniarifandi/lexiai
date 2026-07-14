@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="<?= base_url() ?>logolexiaismall.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
@@ -27,10 +28,13 @@
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-[#090d16]/70 backdrop-blur-md transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                <span class="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">Lexi</span>
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">AI</span>
-            </div>
+            <div class="flex items-center">
+    <img
+        src="<?= base_url() ?>logolexiai.png"
+        alt="Lexi AI"
+        class="h-10 w-auto"
+    >
+</div>
             <div class="hidden md:flex gap-8 text-sm font-medium tracking-wide">
                 <a href="#about" class="text-zinc-400 hover:text-white transition-colors">Tentang</a>
                 <a href="#modules" class="text-zinc-400 hover:text-white transition-colors">Modul</a>
