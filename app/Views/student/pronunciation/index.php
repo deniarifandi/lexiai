@@ -255,89 +255,130 @@
     */
 
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognizer = null;
-    let recordingIndex = null;
+let recognizer = null;
+let recordingIndex = null;
+let recordTimeoutId = null;
 
-    function toggleRecord(index, word) {
-        if (!SpeechRecognitionAPI) {
-            alert('Browser kamu belum mendukung fitur record ini. Coba pakai Chrome atau Edge.');
-            return;
-        }
+const RECORD_ERROR_MESSAGES = {
+    'not-allowed': 'Akses mikrofon ditolak. Cek izin mikrofon di pengaturan browser kamu.',
+    'service-not-allowed': 'Akses mikrofon ditolak oleh browser. Cek pengaturan izin mikrofon.',
+    'audio-capture': 'Mikrofon tidak terdeteksi. Pastikan mikrofon tidak dipakai aplikasi lain.',
+    'network': 'Koneksi internet bermasalah saat memproses suara. Coba lagi.',
+    'aborted': 'Rekaman dibatalkan. Coba lagi.',
+    'no-speech': 'Tidak ada suara terdeteksi. Coba lagi dan ucapkan lebih jelas.',
+    'language-not-supported': 'Bahasa/aksen ini tidak didukung untuk speech recognition di device kamu.',
+};
 
-        // Kalau sedang record baris ini, stop
-        if (recordingIndex === index && recognizer) {
-            recognizer.stop();
-            return;
-        }
+function toggleRecord(index, word) {
+    if (!SpeechRecognitionAPI) {
+        alert('Browser kamu belum mendukung fitur record ini. Coba pakai Chrome atau Edge.');
+        return;
+    }
 
-        // Kalau sedang record baris lain, stop dulu
-        if (recognizer) {
-            recognizer.stop();
-        }
+    if (recordingIndex === index && recognizer) {
+        recognizer.stop();
+        return;
+    }
 
-        recordingIndex = index;
-        const btn = document.getElementById('btn-record-' + index);
-        btn.classList.add('bg-red-500', 'text-white', 'animate-pulse');
+    if (recognizer) {
+        recognizer.stop();
+    }
 
-        recognizer = new SpeechRecognitionAPI();
-        recognizer.lang = getAccent();
-        recognizer.maxAlternatives = 1;
-        recognizer.interimResults = false;
+    recordingIndex = index;
+    const btn = document.getElementById('btn-record-' + index);
+    btn.classList.add('bg-red-500', 'text-white', 'animate-pulse');
 
-        recognizer.onstart = () => {
-            console.log('[speech] started listening for word:', word);
-        };
+    // Bersihkan feedback lama & kasih indikasi "sedang mendengarkan"
+    const panel = document.getElementById('feedback-' + index);
+    panel.className = 'mt-2 text-[11px] font-normal rounded-lg px-3 py-2 border bg-zinc-50 border-zinc-200 text-zinc-500';
+    panel.textContent = 'Mendengarkan... ucapkan kata "' + word + '"';
+    panel.classList.remove('hidden');
 
-        recognizer.onspeechstart = () => {
-            console.log('[speech] speech detected');
-        };
+    recognizer = new SpeechRecognitionAPI();
+    recognizer.lang = getAccent();
+    recognizer.maxAlternatives = 1;
+    recognizer.interimResults = false;
 
-        recognizer.onspeechend = () => {
-            console.log('[speech] speech ended');
-        };
+    let resultReceived = false;
 
-        recognizer.onnomatch = () => {
-            console.log('[speech] no match found');
-        };
-
-        recognizer.onresult = (event) => {
-            console.log('[speech] onresult fired', event);
-            const transcript = event.results[0][0].transcript;
-            console.log('[speech] transcript:', transcript);
-            sendForReview(index, word, transcript);
-        };
-
-        recognizer.onerror = (event) => {
-            console.log('[speech] onerror:', event.error);
-            resetRecordButton(index);
-            if (event.error === 'no-speech') {
+    recognizer.onstart = () => {
+        console.log('[speech] started listening for word:', word);
+        // Guard: kalau dalam 8 detik tidak ada onresult/onerror/onend sama sekali
+        // (recognizer "hang"), paksa stop dan kasih tahu user.
+        recordTimeoutId = setTimeout(() => {
+            if (recordingIndex === index) {
+                console.log('[speech] timeout guard triggered, forcing stop');
+                try { recognizer.abort(); } catch (e) {}
                 showFeedback(index, {
                     ok: true,
                     score: 0,
-                    feedback: 'Tidak ada suara terdeteksi. Coba lagi dan ucapkan lebih jelas.',
+                    feedback: 'Rekaman terlalu lama tidak merespons. Coba lagi (cek koneksi internet).',
                     tip: '',
                 });
+                resetRecordButton(index);
             }
-        };
+        }, 8000);
+    };
 
-        recognizer.onend = () => {
-            console.log('[speech] onend fired');
-            resetRecordButton(index);
-        };
+    recognizer.onresult = (event) => {
+        resultReceived = true;
+        console.log('[speech] onresult fired', event);
+        const transcript = event.results[0][0].transcript;
+        sendForReview(index, word, transcript);
+    };
 
-        try {
-            recognizer.start();
-        } catch (err) {
-            console.log('[speech] failed to start:', err);
+    recognizer.onerror = (event) => {
+        console.log('[speech] onerror:', event.error);
+        resultReceived = true; // supaya onend tidak dobel nampilin pesan
+        resetRecordButton(index);
+
+        const message = RECORD_ERROR_MESSAGES[event.error]
+            || ('Terjadi kesalahan saat merekam (' + event.error + '). Coba lagi.');
+
+        showFeedback(index, {
+            ok: true,
+            score: 0,
+            feedback: message,
+            tip: '',
+        });
+    };
+
+    recognizer.onend = () => {
+        console.log('[speech] onend fired');
+        clearTimeout(recordTimeoutId);
+        // Kalau onend fire tanpa onresult/onerror sebelumnya -> kasus "hang" senyap
+        if (!resultReceived) {
+            showFeedback(index, {
+                ok: true,
+                score: 0,
+                feedback: 'Rekaman berhenti tanpa hasil. Coba lagi, atau cek koneksi internet kamu.',
+                tip: '',
+            });
         }
-    }
+        resetRecordButton(index);
+    };
 
-    function resetRecordButton(index) {
-        const btn = document.getElementById('btn-record-' + index);
-        btn.classList.remove('bg-red-500', 'text-white', 'animate-pulse');
-        recordingIndex = null;
-        recognizer = null;
+    try {
+        recognizer.start();
+    } catch (err) {
+        console.log('[speech] failed to start:', err);
+        showFeedback(index, {
+            ok: true,
+            score: 0,
+            feedback: 'Gagal memulai rekaman. Coba klik tombol record sekali lagi.',
+            tip: '',
+        });
+        resetRecordButton(index);
     }
+}
+
+function resetRecordButton(index) {
+    const btn = document.getElementById('btn-record-' + index);
+    if (btn) btn.classList.remove('bg-red-500', 'text-white', 'animate-pulse');
+    clearTimeout(recordTimeoutId);
+    recordingIndex = null;
+    recognizer = null;
+}
 
     async function sendForReview(index, word, transcript) {
         const panel = document.getElementById('feedback-' + index);
