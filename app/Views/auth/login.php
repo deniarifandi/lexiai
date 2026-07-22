@@ -159,18 +159,39 @@
 
            <div class="grid grid-cols-2 gap-3 pt-2">
 
-                <a href="<?= site_url('/') ?>"
-                   class="flex items-center justify-center border border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-700 py-3.5 rounded-xl text-sm font-semibold transition-all">
-                    Kembali
-                </a>
+    <!-- Kembali -->
+    <a
+        href="<?= site_url('/') ?>"
+        class="flex items-center justify-center border border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-700 py-3.5 rounded-xl text-sm font-semibold transition-all"
+    >
+        Kembali
+    </a>
 
-                <button
-                    type="submit"
-                    class="bg-zinc-950 hover:bg-zinc-900 text-white py-3.5 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-sm active:scale-[0.99]">
-                    Masuk
-                </button>
+    <!-- Masuk -->
+    <button
+        type="submit"
+        class="bg-zinc-950 hover:bg-zinc-900 text-white py-3.5 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-sm active:scale-[0.99]"
+    >
+        Masuk
+    </button>
 
-            </div>
+</div>
+
+<!-- Register -->
+<div class="pt-3 text-center">
+
+    <p class="text-sm text-zinc-500">
+        Belum memiliki akun?
+
+        <a
+            href="<?= site_url('register') ?>"
+            class="font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
+        > 
+            Daftar sekarang
+        </a>
+    </p>
+
+</div>
         </form>
 
           <!--   <div class="flex items-center my-6">

@@ -35,22 +35,62 @@
         class="h-10 w-auto"
     >
 </div>
-            <div class="hidden md:flex gap-8 text-sm font-medium tracking-wide">
-                <a href="#about" class="text-zinc-400 hover:text-white transition-colors">Tentang</a>
-                <a href="#modules" class="text-zinc-400 hover:text-white transition-colors">Modul</a>
-                <a href="#benefit" class="text-zinc-400 hover:text-white transition-colors">Manfaat</a>
-                <?php if (session('logged_in')): ?>
-                    <a href="<?= site_url(session('role') === 'admin' ? 'admin/dashboard' : 'dashboard') ?>"
-                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
-                        Dashboard
-                    </a>
-                <?php else: ?>
-                    <a href="<?= site_url('login') ?>"
-                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
-                        Login
-                    </a>
-                <?php endif; ?>
-            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
+
+    <!-- Navigation -->
+    <a
+        href="#about"
+        class="text-zinc-400 hover:text-white transition-colors"
+    >
+        Tentang
+    </a>
+
+    <a
+        href="#modules"
+        class="text-zinc-400 hover:text-white transition-colors"
+    >
+        Modul
+    </a>
+
+    <a
+        href="#benefit"
+        class="text-zinc-400 hover:text-white transition-colors"
+    >
+        Manfaat
+    </a>
+
+
+    <?php if (session('logged_in')): ?>
+
+        <!-- Dashboard -->
+        <a
+            href="<?= site_url(session('role') === 'admin' ? 'admin/dashboard' : 'dashboard') ?>"
+            class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm"
+        >
+            Dashboard
+        </a>
+
+    <?php else: ?>
+
+        <!-- Login -->
+        <a
+            href="<?= site_url('login') ?>"
+            class="border border-white/10 hover:border-white/30 text-white hover:bg-white/5 px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all"
+        >
+            Login
+        </a>
+
+        <!-- Register -->
+        <a
+            href="<?= site_url('register') ?>"
+            class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_25px_rgba(16,185,129,0.3)]"
+        >
+            Register
+        </a>
+
+    <?php endif; ?>
+
+</div>
         </div>
     </nav>
 
@@ -261,12 +301,67 @@
             </div>
         </section>
 
-        <footer class="border-t border-zinc-100 bg-white text-zinc-500 text-xs py-12">
-            <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p>© 2026 LexiAI. All rights reserved.</p>
-                <p class="font-medium text-zinc-400 uppercase tracking-widest text-[10px]">Artificial Intelligence for Agriculture English Learning</p>
+        <footer class="border-t border-zinc-100 bg-white text-zinc-500">
+
+    <!-- Institutional Logos -->
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-12">
+
+        <div class="flex flex-col items-center gap-8">
+
+            <!-- Label -->
+            <p class="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">
+                Supported By:
+            </p>
+
+            <!-- Logos -->
+            <div class="flex items-center justify-center gap-10 md:gap-16">
+
+                <!-- Universitas Brawijaya -->
+                <div class="h-28 w-56 md:h-36 md:w-72 flex items-center justify-center">
+                    <img
+                        src="<?= base_url('ub.png') ?>"
+                        alt="Universitas Brawijaya"
+                        class="max-h-28 md:max-h-36 max-w-full w-auto object-contain"
+                    >
+                </div>
+
+                <!-- Divider -->
+                <div class="h-20 md:h-28 w-px bg-zinc-200"></div>
+
+                <!-- Polbangtan YOMA -->
+                <div class="h-28 w-56 md:h-36 md:w-72 flex items-center justify-center">
+                    <img
+                        src="<?= base_url('polbangtan.png') ?>"
+                        alt="Polbangtan YOMA"
+                        class="max-h-28 md:max-h-36 max-w-full w-auto object-contain"
+                    >
+                </div>
+
             </div>
-        </footer>
+
+        </div>
+
+    </div>
+
+
+    <!-- Footer Bottom -->
+    <div class="border-t border-zinc-100">
+
+        <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+
+            <p class="text-xs text-zinc-500">
+                © 2026 LexiAI. All rights reserved.
+            </p>
+
+            <p class="font-medium text-zinc-400 uppercase tracking-widest text-[10px] text-center">
+                Artificial Intelligence for Agriculture English Learning
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
 
     </main>
 
