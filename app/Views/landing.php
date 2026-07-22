@@ -35,62 +35,23 @@
         class="h-10 w-auto"
     >
 </div>
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
-
-    <!-- Navigation -->
-    <a
-        href="#about"
-        class="text-zinc-400 hover:text-white transition-colors"
-    >
-        Tentang
-    </a>
-
-    <a
-        href="#modules"
-        class="text-zinc-400 hover:text-white transition-colors"
-    >
-        Modul
-    </a>
-
-    <a
-        href="#benefit"
-        class="text-zinc-400 hover:text-white transition-colors"
-    >
-        Manfaat
-    </a>
-
-
-    <?php if (session('logged_in')): ?>
-
-        <!-- Dashboard -->
-        <a
-            href="<?= site_url(session('role') === 'admin' ? 'admin/dashboard' : 'dashboard') ?>"
-            class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm"
-        >
-            Dashboard
-        </a>
-
-    <?php else: ?>
-
-        <!-- Login -->
-        <a
-            href="<?= site_url('login') ?>"
-            class="border border-white/10 hover:border-white/30 text-white hover:bg-white/5 px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all"
-        >
-            Login
-        </a>
-
-        <!-- Register -->
-        <a
-            href="<?= site_url('register') ?>"
-            class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_25px_rgba(16,185,129,0.3)]"
-        >
-            Register
-        </a>
-
-    <?php endif; ?>
-
-</div>
+            <div class="hidden md:flex gap-8 text-sm font-medium tracking-wide">
+                <a href="#about" class="text-zinc-400 hover:text-white transition-colors">Tentang</a>
+                <a href="#modules" class="text-zinc-400 hover:text-white transition-colors">Modul</a>
+                <a href="#benefit" class="text-zinc-400 hover:text-white transition-colors">Manfaat</a>
+                <?php if (session('logged_in')): ?>
+                    <a href="<?= site_url(session('role') === 'admin' ? 'admin/dashboard' : 'dashboard') ?>"
+                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
+                        Dashboard
+                    </a>
+                <?php else: ?>
+                    <a href="<?= site_url('login') ?>"
+                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
+                        Login
+                    </a>
+                    
+                <?php endif; ?>
+            </div>
         </div>
     </nav>
 

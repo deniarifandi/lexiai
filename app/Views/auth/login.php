@@ -148,7 +148,7 @@
                         type="checkbox"
                         name="remember"
                         value="1"
-                        checked
+                        
                         class="w-4 h-4 rounded text-emerald-600 border-zinc-300 focus:ring-emerald-500/20 accent-emerald-600">
 
                     <span class="text-xs font-medium text-zinc-600">
