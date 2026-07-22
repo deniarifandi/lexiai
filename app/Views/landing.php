@@ -49,7 +49,7 @@
                        class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold tracking-wider transition-all">
                         Login
                     </a>
-                    
+
                 <?php endif; ?>
             </div>
         </div>
@@ -64,7 +64,7 @@
                 <div class="inline-flex items-center gap-2 bg-white/[0.03] border border-white/10 px-4 py-1.5 rounded-full text-xs font-medium tracking-wider text-emerald-400 uppercase">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> AI-Powered Learning Platform
                 </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.1]">
                     Akselerasi Bahasa Inggris <br>
                     <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Sektor Pertanian</span>
                 </h1>
